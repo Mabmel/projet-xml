@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   targetNamespace="http://univ.fr/cv24" xmlns="http://univ.fr/cv24"
+		   elementFormDefault="qualified" >
+
+	<xs:element name="cv24" type="cvtype"/>
+	<xs:element name="identite" type="identiteType" />
+	<xs:element name="genre" type="genretype"/>
+	<xs:element name="nom" type="String32maj"/>
+	<xs:element name="prenom" type="String32"/>
+	<xs:element name="tel" type="telType"/>
+	<xs:element name="mel" type="TypeMel"/>
+	<xs:element name="objectif" type="objectiftype"/>
+	<xs:element name="prof" type="profType" />
+	<xs:element name="detail" type="detailType"/>
+	<xs:element name="datedeb" type="xs:date"/>
+	<xs:element name="datefin" type="xs:date"/>
+	<xs:element name="titre" type="String128"/>
+	<xs:element name="competences" type="competencestype"/>
+	<xs:element name="diplome" type="diplometype"/>
+	<xs:element name="date" type="xs:date"/>
+	<xs:element name="institut" type="xs:string"/>
+	<xs:element name="titreD" type="String128"/>
+	<xs:element name="certif" type="certiType"/>
+	<xs:element name="divers" type="divertype"/>
+	<xs:element name="lv" type="lvtype"/>
+	<xs:element name="autre" type="autretype"/>
+
+
+	<!-- declaration des type Certificationtype -->
+	<xs:simpleType name="certificationtype">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MAT"/>
+			<xs:enumeration value="CLES"/>
+			<xs:enumeration value="TOEIC"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- declaration des type NIV -->
+	<xs:simpleType name="nivs">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="A1"/>
+			<xs:enumeration value="A2"/>
+			<xs:enumeration value="B1"/>
+			<xs:enumeration value="B2"/>
+			<xs:enumeration value="C1"/>
+			<xs:enumeration value="C2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Niveau de maîtrise -->
+
+
+	<xs:simpleType name="nivimaitrise">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="10"/>
+			<xs:maxInclusive value="990"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<!-- Type genre  -->
+
+
+
+	<xs:simpleType name="genretype">
+
+		<xs:restriction base="xs:string">
+
+			<xs:enumeration value="Mme"/>
+
+			<xs:enumeration value="M."/>
+
+			<xs:enumeration value="Mrs"/>
+
+			<xs:enumeration value="Miss"/>
+
+			<xs:enumeration value="Mr"/>
+
+		</xs:restriction>
+
+	</xs:simpleType>
+
+
+
+	<!-- Define String32maj -->
+	<xs:simpleType name="String32maj">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="32"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Define String32 -->
+	<xs:simpleType name="String32">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="32"/>
+
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- Define String128 -->
+	<xs:simpleType name="String128">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="128"/>
+
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<!--type telephone   -->
+	<xs:simpleType name="telType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{10}|\d{2}\s\d{2}\s\d{2}\s\d{2}|\d{1}\s\d{3}\s\d{3}\s\d{3}|\+33\s\d{1,2}\s\d{2}\s\d{2}\s\d{2}\s\d{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- email  -->
+	<xs:simpleType name="TypeMel">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-ZàâçéèêëîïôûùüÿñæœÀÂÇÉÈÊËÎÏÔÛÙÜŸÑÆŒ0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- qualifLvlType -->
+	<xs:simpleType name="qualifLvlType">
+		<xs:annotation>
+			<xs:documentation xml:lang="fr">
+				Niveaux de qualification : 1 : BEP / CAP 2 : Bac 3 : Bac + 2 4 : Bac + 3 5 : Bac + 4 6 : Bac + 5 7 : Bac + 6 8 : Bac + 8
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+
+	<xs:simpleType name="LangType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+
+
+
+
+
+	<!--  ordre 1 n'est pas respecter -->
+	<xs:complexType name="identiteType">
+		<xs:sequence>
+			<xs:element ref="genre" minOccurs="1" maxOccurs="1"  />
+			<xs:element ref="nom" minOccurs="1" maxOccurs="1" />
+			<xs:element ref="prenom" minOccurs="1" maxOccurs="1" />
+			<xs:element ref="tel" minOccurs="0" maxOccurs="1" />
+			<xs:element ref="mel" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="objectiftype" >
+		<xs:simpleContent>
+			<xs:extension base="String128">
+				<xs:attribute name="statut" use="required">
+					<xs:simpleType>
+						<xs:restriction base="String128">
+							<xs:enumeration value="stage"/>
+							<xs:enumeration value="emploi"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<!-- **************************************************************** -->
+	<xs:complexType name="profType">
+		<xs:sequence>
+			<xs:element name="detail" type="detailType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ******************************************************** -->
+	<xs:complexType name="detailType">
+		<xs:sequence>
+			<xs:element ref="datedeb" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="datefin" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="titre" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- **************************************************************** -->
+	<xs:complexType name="competencestype">
+		<xs:sequence>
+			<xs:element ref="diplome"  minOccurs="1" maxOccurs="5"/>
+			<xs:element ref="certif" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *************************************************************** -->
+	<xs:complexType name="diplometype" >
+		<xs:sequence>
+			<xs:element ref="date"/>
+			<xs:element ref="institut" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="titreD" minOccurs="0" maxOccurs="5"/>
+
+		</xs:sequence>
+		<!-- declarartion attribut niveau  -->
+		<xs:attribute name="niveau" type="qualifLvlType" use="required"/>
+		<xs:attribute name="intitule" type="String32" use="required"/>
+
+
+	</xs:complexType>
+
+
+
+	<!-- *************************************************************** -->
+	<xs:complexType name="certiType">
+		<xs:sequence>
+			<xs:element ref="datedeb" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="datefin" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="titre" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *************************************************************** -->
+	<xs:complexType name="divertype">
+		<xs:sequence>
+			<!-- <xs:element ref="lv" minOccurs="1" maxOccurs="6"/> -->
+			<xs:element ref="lv" minOccurs="1" maxOccurs="5"/>
+			<xs:element ref="autre" minOccurs="0" maxOccurs="3"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *************************************************************** -->
+	<xs:complexType name="lvtype">
+		<xs:attribute name="lang" type="LangType" use="required"/>
+		<xs:attribute name="cert" type="certificationtype" use="required"/>
+		<xs:attribute name="nivs" type="nivs" use="optional"/>
+		<xs:attribute name="nivi" type="nivimaitrise" use="optional"/>
+	</xs:complexType>
+	<!-- *************************************************************** -->
+	<xs:complexType name="autretype">
+		<xs:attribute name="titre" type="String32" use="required"/>
+		<xs:attribute name="comment" type="String128" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="cvtype">
+		<xs:sequence>
+			<xs:element ref="identite" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="objectif" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="prof" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="competences" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="divers" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+
+</xs:schema>
