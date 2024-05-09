@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Ajout CV</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="../static/images/1.jpg" rel="icon">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <!-- Template Stylesheet -->
+    <link href="../static/style2.css" rel="stylesheet">
+
+</head>
+
+<body>
+<header>
+    <div class="logo">
+        <img src="../static/images/logo.png" alt="Logo de l'Université de Rouen">
+    </div>
+    <div class="title">
+        <a href="#">Accueil</a>
+        <a href="#">Ajout CV</a>
+        <a href="#">Liste des CV</a>
+    </div>
+
+</header>
+<div class="container-fluid">
+
+    <div class="content">
+
+        <!-- Ajout CV -->
+
+        <div class="informationillus">
+            <div class="row g-4 justify-content-center align-items-center text-center">
+                <div class="col">
+                    <h2 class="NOM">Ajout CV</h2>
+                </div>
+            </div>
+            <div class="form-container">
+                <form method=""  enctype="multipart/form-data" id="formulaireComposants">
+                    <!-- Identité -->
+
+                    <h3>Identité</h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label">Nom</label>
+                                <input type="text" class="form-control" id="nom" name="nom" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label">Prénom</label>
+                                <input type="text" class="form-control" id="prenom" name="prenom" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label">Genre</label>
+                                <select class="form-select " name="genre"  id="genre" required>
+                                    <option value="Mme">Mme</option>
+                                    <option value="M.">M.</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label">Téléphone</label>
+                                <input type="text" class="form-control" id="telephone" name="telephone" required>
+                                <small id="telephoneError" style="color: red;"></small>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+
+                            <div class="mb-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" id="emailInput" class="form-control" name="email" required>
+                                <small id="emailError" style="color: red;"></small>
+                            </div>
+
+                        </div>
+                    </div>
+                    <br>
+                    <!-- Objectif -->
+                    <h3>Objectif</h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Objectif</label>
+                                <textarea class="form-control" name="objectif" id="emploie" required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Statut de l'objectif</label>
+                                <select class="form-select" name="statut_objectif" id="statut" required>
+                                    <option value="stage">Stage</option>
+                                    <option value="emploi">Emploi</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <!-- Expériences professionnelles -->
+                    <h3>Expériences professionnelles</h3>
+                    <br>
+                    <div id="experiences">
+                        <div class="experience mb-3">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="mb-2">
+                                        <label class="form-label">Expérience professionnelle 1</label>
+                                        <input type="text" class="form-control" name="titreExp"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-2">
+                                        <label class="form-label">Date de début</label>
+                                        <input type="date" class="form-control" name="dateDebutExp" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-2">
+                                        <label class="form-label">Date de fin</label>
+                                        <input type="date" class="form-control" name="dateFinExp">
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <button type="button" class="ajouter-experience">Ajouter une expérience
+                        professionnelle</button>
+
+                    <!-- Compétences -->
+                    <h3>Compétences </h3>
+                    <br>
+                    <h4>Diplôme</h4>
+                    <div id="competences">
+                        <div class="Diplomes row g-3">
+                            <div class="col-md-6">
+                                <div class="competence mb-3">
+                                    <label class="form-label">Intitulé du diplôme</label>
+                                    <input type="text" class="form-control" name="diplome" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Niveau</label>
+                                    <select class="form-select" name="niveau" required>
+                                        <option value="">Sélectionnez un niveau</option>
+                                        <option value="BEP">BEP</option>
+                                        <option value="CAP">CAP</option>
+                                        <option value="Bac">Bac</option>
+                                        <option value="Bac + 2">Bac + 2</option>
+                                        <option value="Bac + 3">Bac + 3</option>
+                                        <option value="Bac + 4">Bac + 4</option>
+                                        <option value="Bac + 5">Bac + 5</option>
+                                        <option value="Bac + 8">Bac + 8</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Institut</label>
+                                    <input type="text" class="form-control" name="institut" required>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Date d'obtention</label>
+                                    <input type="date" class="form-control" name="date_obtention" required>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="ajouter-competence">Ajouter un diplôme</button>
+                    <br>
+                    <h4>Certifications</h4>
+                    <div id="certifications">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="certifications mb-4">
+                                    <label class="form-label">Intitulé de la Certification</label>
+                                    <input type="text" class="form-control" name="certification[]" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label class="form-label">Date de début</label>
+                                    <input type="date" class="form-control" name="date_debut_certification[]"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label class="form-label">Date de fin</label>
+                                    <input type="date" class="form-control" name="date_fin_certification[]">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <button type="button" class="ajouter-certification">Ajouter une Certification</button>
+                    <br>
+                    <h3>Divers</h3>
+                    <br>
+                    <!-- Langues vivantes -->
+                    <h4>Langues</h4>
+                    <br>
+                    <div id="langues">
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="langue mb-3">
+                                    <label class="form-label">Langue vivante</label>
+                                    <input type="text" class="form-control" name="Langue-vivante[]">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="langue mb-3">
+                                    <label class="form-label">Certification</label>
+                                    <select class="form-select langue-select" name="langue[]" required>
+                                        <option value="MAT">MAT</option>
+                                        <option value="CLES">CLES</option>
+                                        <option value="TOEIC">TOEIC</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="langue mb-3">
+                                    <label class="form-label">Niveau</label>
+                                    <select class="form-select niveau-select" name="niveau_langue" required>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <button type="button" class="ajouter-langue">Ajouter une langue vivante</button>
+                    <br>
+                    <!-- Autres compétences -->
+                    <h4>Autre compétence</h4>
+                    <br>
+                    <div id="autres-competences">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="autre-competence mb-3">
+                                    <label class="form-label">Titre</label>
+                                    <input type="text" class="form-control" name="autre_competence[]">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="autre-competence mb-3">
+                                    <label class="form-label">Commentaire</label>
+                                    <textarea class="form-control" name="commentaire_autre_competence[]" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="autre-competence mb-3">
+
+                                    <button type="button" class="ajouter-autre-competence">Ajouter une autre
+                                        compétence</button>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3 d-flex justify-content-center gap-3">
+                        <button type="submit" name="valider" class="ajillu" onclick="submitForm()">Ajouter</button>
+                    </div>
+
+                    <div id="listeCV"></div>
+                </form>
+
+            </div>
+
+
+        </div>
+
+    </div>
+    <!-- Ajout cv -->
+
+</div>
+    <!-- Contenu -->
+
+    <script>
+
+
+        // Récupérez les éléments DOM pertinents
+        const langueSelect = document.querySelector('.langue-select');
+        const niveauSelect = document.querySelector('.niveau-select');
+
+        // Écoutez les changements dans la sélection de la langue
+        langueSelect.addEventListener('change', function() {
+            const selectedLangue = this.value; // Récupérez la langue sélectionnée
+
+            // Effacez les options actuelles du niveauSelect
+            niveauSelect.innerHTML = '';
+
+            // Utilisez un switch pour déterminer le comportement en fonction de la langue sélectionnée
+            switch (selectedLangue) {
+                case 'MAT':
+                    // Pour MAT (Langue maternelle), le niveau n'est pas requis
+                    niveauSelect.innerHTML = '<option value="">Niveau non requis</option>';
+                    break;
+                case 'CLES':
+                    // Pour CLES, les niveaux A1 à C2 sont disponibles
+                    const niveauxCLES = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+                    niveauxCLES.forEach(function (niveau) {
+                        niveauSelect.innerHTML += `<option value="${niveau}">${niveau}</option>`;
+                    });
+                    break;
+                case 'TOEIC':
+                    // Pour TOEIC, les niveaux varient de 10 à 990
+                    for (let i = 10; i <= 990; i += 10) {
+                        niveauSelect.innerHTML += `<option value="${i}">${i}</option>`;
+                    }
+                    break;
+                default:
+                    // Si aucune langue n'est sélectionnée, afficher un message générique
+                    niveauSelect.innerHTML = '<option value="">Sélectionnez une langue d\'abord</option>';
+                    break;
+            }
+        });
+
+
+
+        const emailInput = document.getElementById('emailInput');
+        const emailError = document.getElementById('emailError');
+        emailInput.addEventListener('input', function () {
+            const emailValue = emailInput.value;
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$/;
+
+            if (!emailRegex.test(emailValue)) {
+                emailError.textContent = 'Format invalide';
+            } else {
+                emailError.textContent = ''; // Efface le message d'erreur lorsque le format est valide
+            }
+        });
+
+
+        const telephoneInput = document.getElementById('telephone');
+        const telephoneError = document.getElementById('telephoneError');
+
+        telephoneInput.addEventListener('input', function () {
+            const telephoneValue = telephoneInput.value;
+            const telephoneRegex = /^(0\d{9}|0\d{2}\s\d{2}\s\d{2}\s\d{2}\s\d{2}|\d{1}\s\d{3}\s\d{3}\s\d{3}|\+33\s\d{1}\s\d{2}\s\d{2}\s\d{2}\s\d{2})$/;
+            if (!telephoneRegex.test(telephoneValue)) {
+                telephoneError.textContent = 'Format invalide';
+            } else {
+                telephoneError.textContent = ''; // Efface le message d'erreur lorsque le format est valide
+            }
+        });
+
+        function resetNiveauOptions(langueSelect, niveauSelect) {
+            const selectedLangue = langueSelect.value;
+            // Réinitialiser les options du champ de sélection de niveau
+            niveauSelect.innerHTML = '';
+            // Ajouter les options en fonction de la langue sélectionnée
+            switch (selectedLangue) {
+                case 'MAT':
+                    // Pour MAT (Langue maternelle), le niveau n'est pas requis
+                    niveauSelect.innerHTML = '<option value="">Niveau non requis</option>';
+                    break;
+                case 'CLES':
+                    // Pour CLES, les niveaux A1 à C2 sont disponibles
+                    const niveauxCLES = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+                    niveauxCLES.forEach(function (niveau) {
+                        niveauSelect.innerHTML += `<option value="${niveau}">${niveau}</option>`;
+                    });
+                    break;
+                case 'TOEIC':
+                    // Pour TOEIC, les niveaux varient de 10 à 990
+                    for (let i = 10; i <= 990; i += 10) {
+                        niveauSelect.innerHTML += `<option value="${i}">${i}</option>`;
+                    }
+                    break;
+                default:
+                    // Si aucune langue n'est sélectionnée, afficher un message générique
+                    niveauSelect.innerHTML = '<option value="">Sélectionnez une langue d\'abord</option>';
+                    break;
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let experienceCount = 1;
+            let competenceCount = 1;
+            let certificationCount = 1;
+            let langueCount = 1;
+            let autreCompetenceCount = 1;
+
+            document.querySelector('.ajouter-experience').addEventListener('click', function () {
+                experienceCount++;
+                const experiences = document.getElementById('experiences');
+                const newExperience = document.createElement('div');
+                newExperience.classList.add('experience', 'mb-3');
+                newExperience.innerHTML = `
+
+
+
+                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <div class="mb-2">
+                                                <label class="form-label">Expérience professionnelle  ${experienceCount}</label>
+                                                <input type="text" class="form-control"
+                                                    name="titreExp" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-2">
+                                                <label class="form-label">Date de début</label>
+                                                <input type="date" class="form-control" name="dateDebutExp" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-2">
+                                                <label class="form-label">Date de fin</label>
+                                                <input type="date" class="form-control" name="dateFinExp">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <button type="button" class="retirer-experience">Retirer cette expérience</button>
+
+                `;
+                experiences.appendChild(newExperience);
+            });
+
+            document.querySelector('.ajouter-competence').addEventListener('click', function () {
+                competenceCount++;
+                const competences = document.getElementById('competences');
+                const newCompetence = document.createElement('div');
+                newCompetence.classList.add('competence', 'mb-3');
+                newCompetence.innerHTML = `
+
+                                 <div id="competences">
+                        <div class="Diplomes row g-3">
+                            <div class="col-md-6">
+                                <div class="competence mb-3">
+                                    <label class="form-label">Intitulé du diplôme</label>
+                                    <input type="text" class="form-control" name="diplome" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Niveau</label>
+                                    <select class="form-select" name="niveau" required>
+                                        <option value="">Sélectionnez un niveau</option>
+                                        <option value="BEP">BEP</option>
+                                        <option value="CAP">CAP</option>
+                                        <option value="Bac">Bac</option>
+                                        <option value="Bac + 2">Bac + 2</option>
+                                        <option value="Bac + 3">Bac + 3</option>
+                                        <option value="Bac + 4">Bac + 4</option>
+                                        <option value="Bac + 5">Bac + 5</option>
+                                        <option value="Bac + 8">Bac + 8</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Institut</label>
+                                    <input type="text" class="form-control" name="institut" required>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Date d'obtention</label>
+                                    <input type="date" class="form-control" name="date_obtention" required>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                </div>
+                            </div>
+                                <button type="button" class="retirer-competence">Retirer cette compétence</button>
+                `;
+                competences.appendChild(newCompetence);
+            });
+
+
+            document.querySelector('.ajouter-certification').addEventListener('click', function () {
+                certificationCount++;
+                const certifications = document.getElementById('certifications');
+                const newCertification = document.createElement('div');
+                newCertification.classList.add('certification', 'mb-3');
+                newCertification.innerHTML = `
+                    <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="certification mb-4">
+                                        <label class="form-label">Intitulé de la Certification ${certificationCount}</label>
+                                        <input type="text" class="form-control" name="certification[]" required>
+                                    </div>
+                                </div>
+
+                                   <div class="col-md-4">
+                                        <div class="mb-2">
+                                            <label class="form-label">Date de début</label>
+                                            <input type="date" class="form-control" name="date_debut_certification[]" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-2">
+                                            <label class="form-label">Date de fin</label>
+                                            <input type="date" class="form-control" name="date_fin_certification[]">
+                                        </div>
+                                    </div>
+
+                            </div>
+                    <button type="button" class="retirer-certification">Retirer cette Certification</button>
+                `;
+                certifications.appendChild(newCertification);
+            });
+
+
+            document.querySelector('.ajouter-langue').addEventListener('click', function () {
+                langueCount++;
+                const langues = document.getElementById('langues');
+                const newLangue = document.createElement('div');
+                newLangue.classList.add('langue', 'mb-3');
+                newLangue.innerHTML = `
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="langue mb-3">
+                    <label class="form-label">Langue vivante ${langueCount}</label>
+                    <input type="text" class="form-control" name="Langue-vivante[]">
+                </div>
+            </div>
+             <div class="col-md-6">
+                <div class="langue mb-3">
+                    <label class="form-label">Certification</label>
+                    <select class="form-select langue-select" name="langue[]" required>
+                        <option value="MAT">MAT</option>
+                        <option value="CLES">CLES</option>
+                        <option value="TOEIC">TOEIC</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="langue mb-3">
+                    <label class="form-label">Niveau</label>
+                    <select class="form-select niveau-select" name="niveau_langue" required>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="retirer-langue">Retirer cette langue</button>
+    `;
+                langues.appendChild(newLangue);
+
+
+                // Réinitialiser les options du champ de sélection de niveau pour le nouveau champ de langue
+                const langueSelect = newLangue.querySelector('.langue-select');
+                const niveauSelect = newLangue.querySelector('.niveau-select');
+                resetNiveauOptions(langueSelect, niveauSelect);
+
+                // Écouter les changements dans le champ de sélection de la langue pour le nouveau champ de langue
+                langueSelect.addEventListener('change', function () {
+                    resetNiveauOptions(langueSelect, niveauSelect);
+                });
+            });
+
+
+
+
+            document.querySelector('.ajouter-autre-competence').addEventListener('click', function () {
+                autreCompetenceCount++;
+                const autresCompetences = document.getElementById('autres-competences');
+                const newAutreCompetence = document.createElement('div');
+                newAutreCompetence.classList.add('autre-competence', 'mb-3');
+                newAutreCompetence.innerHTML = `
+                    <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="autre-competence mb-3">
+                                            <label class="form-label"> Titre ${autreCompetenceCount}</label>
+                                            <input type="text" class="form-control" name="autre_competence[]">
+                                        </div>
+                                    </div>
+                                     <div class="col-md-6">
+                        <div class="autre-competence mb-3">
+                            <label class="form-label">Commentaire</label>
+                            <textarea class="form-control" name="commentaire_autre_competence[]" rows="3"></textarea>
+                        </div>
+                    </div>
+                                </div>
+                                <button type="button" class="retirer-autre-competence">Retirer cette compétence</button>
+                `;
+                autresCompetences.appendChild(newAutreCompetence);
+            });
+
+
+            // Fonction pour retirer une expérience professionnelle
+            document.addEventListener('click', function (event) {
+                if (event.target.classList.contains('retirer-experience')) {
+                    event.target.parentNode.remove();
+                    experienceCount--;
+                }
+            });
+
+            // Fonction pour retirer une compétence
+            document.addEventListener('click', function (event) {
+                if (event.target.classList.contains('retirer-competence')) {
+                    event.target.parentNode.remove();
+                    competenceCount--;
+                }
+            });
+
+            // Fonction pour retirer une certification
+            document.addEventListener('click', function (event) {
+                if (event.target.classList.contains('retirer-certification')) {
+                    event.target.parentNode.remove();
+                    certificationCount--;
+                }
+            });
+
+            // Fonction pour retirer une langue
+            document.addEventListener('click', function (event) {
+                if (event.target.classList.contains('retirer-langue')) {
+                    event.target.parentNode.remove();
+                    langueCount--;
+                }
+            });
+
+            // Fonction pour retirer une autre compétence
+            document.addEventListener('click', function (event) {
+                if (event.target.classList.contains('retirer-autre-competence')) {
+                    event.target.parentNode.remove();
+                    autreCompetenceCount--;
+                }
+            });
+
+        });
+
+        function submitForm() {
+            var nom = document.getElementById("nom").value
+            var prenom = document.getElementById("prenom").value
+            var email = document.getElementById("emailInput").value
+            var tel = document.getElementById("telephone").value
+            var statut = document.getElementById("statut").value
+            var emploie = document.getElementById("emploie").value
+            // Récupérer les données du formulaire et construire le document XML
+            const xmlData = `
+                <CV24>
+                    <identite>
+                        <nom>${nom}</nom>
+                        <prenom>${prenom}</prenom>
+                        <mel>${email}</mel>
+                        <tel>${tel}</tel>
+                    </identite>
+                    <objectif statut="${statut}">${emploie}</objectif>
+                    <prof>
+                        ${collecterExperiences()}
+                    </prof>
+                    <competences>
+                        ${collecterCompetences()}
+
+                        ${collecterCertifications()}
+                    </competences>
+
+                    <cv24:divers>
+                    ${collecterLangue()}
+                    ${collecterAutreCompetence()}
+                    </cv24:divers>
+                </CV24>
+            `;
+
+            // Envoyer les données XML au contrôleur via une requête POST
+            console.log(xmlData)
+        }
+
+        function collecterExperiences() {
+            const experiencesDiv = document.querySelectorAll("#experiences .experience");
+            let experiencesXml = "";
+            experiencesDiv.forEach(experience => {
+                const titre = experience.querySelector("input[name='titreExp']").value;
+                const dateDebut = experience.querySelector("input[name='dateDebutExp']").value;
+                const dateFin = experience.querySelector("input[name='dateFinExp']").value;
+                experiencesXml += `
+                    <detail>
+                        <datedeb>${dateDebut}</datedeb>
+                        <datefin>${dateFin}</datefin>
+                        <titre>${titre}</titre>
+                    </detail>
+                `;
+            });
+            return experiencesXml;
+        }
+
+        function collecterCompetences() {
+            const diplomesDiv = document.querySelectorAll("#competences .Diplomes");
+            let competencesXml = "";
+            diplomesDiv.forEach(diplome => {
+                const intitule = diplome.querySelector("input[name='diplome']").value;
+                const niveau = diplome.querySelector("select[name='niveau']").value;
+                const institut = diplome.querySelector("input[name='institut']").value;
+                const dateObtention = diplome.querySelector("input[name='date_obtention']").value;
+                competencesXml += `
+                    <diplome-niveau niveau="${niveau}">
+                        <intitule>${intitule}</intitule>
+                        <institut>${institut}</institut>
+                        <date>${dateObtention}</date>
+                    </diplome-niveau>
+        `;
+            });
+            return competencesXml;
+        }
+
+        function collecterCertification() {
+            const diplomesDiv = document.querySelectorAll("#competences .Diplomes");
+            let competencesXml = "";
+            diplomesDiv.forEach(diplome => {
+                const intitule = diplome.querySelector("input[name='diplome']").value;
+                const niveau = diplome.querySelector("select[name='niveau']").value;
+                const institut = diplome.querySelector("input[name='institut']").value;
+                const dateObtention = diplome.querySelector("input[name='date_obtention']").value;
+                competencesXml += `
+                    <diplome-niveau niveau="${niveau}">
+                        <intitule>${intitule}</intitule>
+                        <institut>${institut}</institut>
+                        <date>${dateObtention}</date>
+                    </diplome-niveau>
+        `;
+            });
+            return competencesXml;
+        }
+
+        function collecterCertifications() {
+            const certificationsDiv = document.querySelectorAll("#certifications .row.g-3");
+            let certificationsXml = "";
+            certificationsDiv.forEach(certification => {
+                const intitule = certification.querySelector("input[name='certification[]']").value;
+                const dateDebut = certification.querySelector("input[name='date_debut_certification[]']").value;
+                const dateFin = certification.querySelector("input[name='date_fin_certification[]']").value;
+                certificationsXml += `
+                    <cv24:certif>
+                        <cv24:datedeb>${dateDebut}1</cv24:datedeb>
+                        <cv24:datefin>${dateFin}</cv24:datefin>
+                        <cv24:titre>${intitule}</cv24:titre>
+                    </cv24:certif>
+        `;
+            });
+            return certificationsXml;
+        }
+
+        function collecterAutreCompetence() {
+            const autresCompetencesDivs = document.querySelectorAll("#autres-competences .row.g-3");
+            let autresCompetencesXml = "";
+
+            autresCompetencesDivs.forEach(competenceDiv => {
+                const titre = competenceDiv.querySelector("input[name='autre_competence[]']").value;
+                const commentaire = competenceDiv.querySelector("textarea[name='commentaire_autre_competence[]']").value;
+
+                autresCompetencesXml += `
+            <cv24:autre titre="${titre}" commentaire="${commentaire}"/>
+        `;
+            });
+            return autresCompetencesXml;
+        }
+
+        function collecterLangue() {
+            const autresCompetencesDivs = document.querySelectorAll("#autres-competences .row.g-3");
+            let autresCompetencesXml = "";
+
+            autresCompetencesDivs.forEach(competenceDiv => {
+                const titre = competenceDiv.querySelector("input[name='autre_competence[]']").value;
+                const commentaire = competenceDiv.querySelector("textarea[name='commentaire_autre_competence[]']").value;
+
+                autresCompetencesXml += `
+            <cv24:autre titre="${titre}" commentaire="${commentaire}"/>
+        `;
+            });
+            return autresCompetencesXml;
+        }
+
+
+
+        function collecterLangue() {
+            const languesDivs = document.querySelectorAll("#langues .row.g-3");
+            let languesXml = "";
+
+            languesDivs.forEach(langueDiv => {
+                const langue = langueDiv.querySelector("input[name='Langue-vivante[]']").value;
+                const cert = langueDiv.querySelector("select[name='langue[]']").value;
+                let niveau = "";
+
+                // Génération de la balise XML correspondant à la langue vivante
+                if (cert === "MAT") {
+                    languesXml += `
+                <cv24:lv cert="${cert}" lang="${langue}"/>
+            `;
+                } else if (cert === "CLES") {
+                    niveau = langueDiv.querySelector("select[name='niveau_langue']").value;
+                    languesXml += `
+                <cv24:lv cert="${cert}" lang="${langue}" nivs="${niveau}"/>
+            `;
+                } else if (cert === "TOEIC") {
+                    niveau = langueDiv.querySelector("select[name='niveau_langue']").value;
+                    languesXml += `
+                <cv24:lv cert="${cert}" lang="${langue}" nivi="${niveau}"/>
+            `;
+                }
+            });
+
+            return languesXml;
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
