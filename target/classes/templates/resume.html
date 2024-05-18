@@ -1,20 +1,16 @@
 <!DOCTYPE html>
 <html lang="FR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/Helps.css}">
-
     <title>resume</title>
-
 </head>
-
 <body>
 <header>
     <div class="logo">
-        <img src="university_logo.png" alt="Logo de l'Université de Rouen">
+        <img th:src="@{/images/logo.png}" alt="Logo de l'Université de Rouen">
     </div>
     <div class="title">
         <h1>Nom de votre projet</h1>
@@ -22,10 +18,9 @@
     </div>
 </header>
 <main>
-    <h2 class="titreop"> Liste des CV</h2>
+    <h2 class="titreop">Liste des CV</h2>
     <div class="container-fluid pt-4 px-4">
-        <div class="  text-center rounded p-4" style="background-color: aliceblue;">
-
+        <div class="text-center rounded p-4" style="background-color: aliceblue;">
             <div class="table-responsive">
                 <table border="1">
                     <tr>
@@ -36,37 +31,20 @@
                         <th>Diplôme</th>
                         <th>Action</th>
                     </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Monsieur</td>
-                        <td>Jean</td>
-                        <td>Dupont</td>
-                        <td>Licence Informatique</td>
-                        <td><button class="supprimer">Supprimer</button></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Madame</td>
-                        <td>Marie</td>
-                        <td>Dubois</td>
-                        <td>Master GL</td>
-                        <td><button  class="supprimer">Supprimer</button></td>
-
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Monsieur</td>
-                        <td>Paul</td>
-                        <td>Durand</td>
-                        <td>Bac SE</td>
-                        <td><button  class="supprimer">Supprimer</button></td>
+                    <tr th:each="cv : ${cvs}">
+                        <td th:text="${cv.identite.id}"></td>
+                        <td th:text="${cv.identite.genre}"></td>
+                        <td th:text="${cv.identite.prenom}"></td>
+                        <td th:text="${cv.identite.nom}"></td>
+                        <td th:text="${cv.diplomes[0].titre}"></td>
+                        <td>
+                            <button class="supprimer">Supprimer</button>
+                        </td>
                     </tr>
                 </table>
             </div>
         </div>
     </div>
-
 </main>
 </body>
-
 </html>

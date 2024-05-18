@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-      <link rel="stylesheet" th:href="@{/css/Helps.css}">
-      <link rel="stylesheet" th:href="@{/css/style.css}">
+
+     <link rel="stylesheet" th:href="@{/css/Helps.css}">
+     <link rel="stylesheet" th:href="@{/css/style.css}">
 
     <title>Help</title>
 </head>
 <body>
 <header>
     <div class="logo">
-        <img src="university_logo.png" alt="Logo de l'Université de Rouen">
+        <img th:src="@{/images/logo.png}" alt="Logo de l'Université de Rouen">
     </div>
     <div class="title">
         <h1>Nom de votre projet</h1>
@@ -32,7 +33,7 @@
     <h3 class="typeoperati">Liste des CV Format HTML </h3>
     <ul>
 
-        <li><strong>URL:</strong> </li>
+        <li><strong>URL: <a th:href="@{/resume}">Liste des CVs</a></strong> </li>
         <li><strong>Méthode attendue:</strong> GET</li>
         <li><strong>Opération:</strong> Affiche la liste des CV stockés au format HTML.</li>
         <li><strong>Retour:</strong> Page HTML présentant les informations de chaque CV.</li>
@@ -59,7 +60,7 @@
     <h3 class="typeoperati">Ajout d’un CV</h3>
     <ul>
 
-        <li><strong>URL:</strong> </li>
+        <li><strong><a th:href="@{/AjoutCV}">AJOUTER UN CV</a></strong> </li>
         <li><strong>Méthode attendue:</strong> GET</li>
         <li><strong>Opération:</strong> Ajoute un nouveau CV à la base de données.</li>
         <li><strong>Retour:</strong> Flux XML contenant les informations sur l'opération.</li>

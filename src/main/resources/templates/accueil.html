@@ -11,7 +11,7 @@
  <body>
  <header>
      <div class="logo">
-         <img src="university_logo.png" alt="Logo de l'Université de Rouen">
+         <img th:src="@{/images/logo.png}" alt="Logo de l'Université de Rouen">
      </div>
      <div class="title">
          <h1>CVServiceREST</h1>
@@ -20,7 +20,7 @@
  </header>
  <main>
      <h2>Pour plus d'information :</h2>
-     <a href="#">Accéder à la page Help</a>
+     <a th:href="@{/help}">Accéder à la page Help</a>
 
      <h2>Membres de l'équipe :</h2>
      <ul>
