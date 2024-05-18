@@ -4,30 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page d'accueil</title>
-    <link rel="stylesheet" href="../static/style.css">
-</head>
-<body>
-<header>
-    <div class="logo">
-        <img src="university_logo.png" alt="Logo de l'Université de Rouen">
-    </div>
-    <div class="title">
-        <h1>CVServiceREST</h1>
-        <h2>Version 1.0</h2>
-    </div>
-</header>
-<main>
-    <h2>Pour plus d'information :</h2>
-    <a href="#">Accéder à la page Help</a>
+    <!-- <link rel="stylesheet" href="../static/css/style.css">-->
+     <link rel="stylesheet" th:href="@{/css/style.css}">
 
-    <h2>Membres de l'équipe :</h2>
-    <ul>
-        <li>ABBAS Melissa</li>
-        <li>BOURIAHI Fatima</li>
-    </ul>
-</main>
-<footer>
-    <p>&copy; 2024 Université de Rouen</p>
-</footer>
-</body>
-</html>
+ </head>
+ <body>
+ <header>
+     <div class="logo">
+         <img src="university_logo.png" alt="Logo de l'Université de Rouen">
+     </div>
+     <div class="title">
+         <h1>CVServiceREST</h1>
+         <h2>Version 1.0</h2>
+     </div>
+ </header>
+ <main>
+     <h2>Pour plus d'information :</h2>
+     <a href="#">Accéder à la page Help</a>
+
+     <h2>Membres de l'équipe :</h2>
+     <ul>
+         <li>ABBAS Melissa</li>
+         <li>BOURIAHI Fatima</li>
+     </ul>
+ </main>
+ <footer>
+     <p>&copy; 2024 Université de Rouen</p>
+ </footer>
+ </body>
+ </html>

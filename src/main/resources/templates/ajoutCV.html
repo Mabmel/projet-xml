@@ -8,6 +8,7 @@
     <meta content="" name="keywords">
     <meta content="" name="description">
 
+
     <!-- Favicon -->
     <link href="../static/images/1.jpg" rel="icon">
 
@@ -21,27 +22,29 @@
 
 
     <!-- Template Stylesheet -->
-    <link href="../static/style2.css" rel="stylesheet">
 
-</head>
+    <link rel="stylesheet" th:href="@{/css/style2.css}">
+    <!--   <link href="../static/css/style2.css" rel="stylesheet">-->
 
-<body>
-<header>
-    <div class="logo">
-        <img src="../static/images/logo.png" alt="Logo de l'Université de Rouen">
-    </div>
-    <div class="title">
-        <a href="#">Accueil</a>
-        <a href="#">Ajout CV</a>
-        <a href="#">Liste des CV</a>
-    </div>
+ </head>
 
-</header>
-<div class="container-fluid">
+ <body>
+ <header>
+     <div class="logo">
+         <img src="../static/images/logo.png" alt="Logo de l'Université de Rouen">
+     </div>
+     <div class="title">
+         <a href="#">Accueil</a>
+         <a href="#">Ajout CV</a>
+         <a href="#">Liste des CV</a>
+     </div>
 
-    <div class="content">
+ </header>
+ <div class="container-fluid">
 
-        <!-- Ajout CV -->
+     <div class="content">
+
+         <!-- Ajout CV -->
 
         <div class="informationillus">
             <div class="row g-4 justify-content-center align-items-center text-center">
@@ -304,7 +307,6 @@
                         <button type="submit" name="valider" class="ajillu" onclick="submitForm()">Ajouter</button>
                     </div>
 
-                    <div id="listeCV"></div>
                 </form>
 
             </div>
@@ -674,33 +676,35 @@
             var nom = document.getElementById("nom").value
             var prenom = document.getElementById("prenom").value
             var email = document.getElementById("emailInput").value
+            var genre = document.getElementById("genre").value
             var tel = document.getElementById("telephone").value
             var statut = document.getElementById("statut").value
             var emploie = document.getElementById("emploie").value
             // Récupérer les données du formulaire et construire le document XML
             const xmlData = `
-                <CV24>
-                    <identite>
-                        <nom>${nom}</nom>
-                        <prenom>${prenom}</prenom>
-                        <mel>${email}</mel>
-                        <tel>${tel}</tel>
-                    </identite>
-                    <objectif statut="${statut}">${emploie}</objectif>
-                    <prof>
+                <cv24:cv24>
+                    <cv24:identite>
+                     <cv24:genre>${genre}</cv24:genre>
+                        <cv24:nom>${nom}</cv24:nom>
+                        <cv24:prenom>${prenom}</cv24:prenom>
+                        <cv24:mel>${email}</cv24:mel>
+                        <cv24:tel>${tel}</cv24:tel>
+                    </cv24:identite>
+                    <cv24:objectif statut="${statut}">${emploie}</cv24:objectif>
+                    <cv24:prof>
                         ${collecterExperiences()}
-                    </prof>
-                    <competences>
+                    </cv24:prof>
+                    <cv24:competences>
                         ${collecterCompetences()}
 
                         ${collecterCertifications()}
-                    </competences>
+                    </cv24:competences>
 
                     <cv24:divers>
                     ${collecterLangue()}
                     ${collecterAutreCompetence()}
                     </cv24:divers>
-                </CV24>
+                </cv24:cv24>
             `;
 
             // Envoyer les données XML au contrôleur via une requête POST
@@ -715,11 +719,11 @@
                 const dateDebut = experience.querySelector("input[name='dateDebutExp']").value;
                 const dateFin = experience.querySelector("input[name='dateFinExp']").value;
                 experiencesXml += `
-                    <detail>
-                        <datedeb>${dateDebut}</datedeb>
-                        <datefin>${dateFin}</datefin>
-                        <titre>${titre}</titre>
-                    </detail>
+                    <cv24:detail>
+                        <cv24:datedeb>${dateDebut}</cv24:datedeb>
+                        <cv24:datefin>${dateFin}</cv24:datefin>
+                        <cv24:titre>${titre}</cv24:titre>
+                    </cv24:detail>
                 `;
             });
             return experiencesXml;
@@ -734,30 +738,11 @@
                 const institut = diplome.querySelector("input[name='institut']").value;
                 const dateObtention = diplome.querySelector("input[name='date_obtention']").value;
                 competencesXml += `
-                    <diplome-niveau niveau="${niveau}">
-                        <intitule>${intitule}</intitule>
-                        <institut>${institut}</institut>
-                        <date>${dateObtention}</date>
-                    </diplome-niveau>
-        `;
-            });
-            return competencesXml;
-        }
-
-        function collecterCertification() {
-            const diplomesDiv = document.querySelectorAll("#competences .Diplomes");
-            let competencesXml = "";
-            diplomesDiv.forEach(diplome => {
-                const intitule = diplome.querySelector("input[name='diplome']").value;
-                const niveau = diplome.querySelector("select[name='niveau']").value;
-                const institut = diplome.querySelector("input[name='institut']").value;
-                const dateObtention = diplome.querySelector("input[name='date_obtention']").value;
-                competencesXml += `
-                    <diplome-niveau niveau="${niveau}">
-                        <intitule>${intitule}</intitule>
-                        <institut>${institut}</institut>
-                        <date>${dateObtention}</date>
-                    </diplome-niveau>
+                    <cv24:diplome intitule="${intitule} niveau="${niveau}">
+                        <cv24:intitule>${intitule}</cv24:intitule>
+                        <cv24:institut>${institut}</cv24:institut>
+                        <cv24:date>${dateObtention}</cv24:date>
+                    </cv24:diplome>
         `;
             });
             return competencesXml;

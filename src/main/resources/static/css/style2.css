@@ -1,0 +1,222 @@
+
+      /********** Template CSS **********/
+  :root {
+      --primary: #3857ac;
+      --sidebar-bg: linear-gradient(rgba(5, 10, 48, 1), rgba(5, 10, 48, 0.8));
+      --navbar-bg: linear-gradient(rgba(5, 10, 48, 1), rgba(5, 10, 48, 0.8));
+      --footer-bg: linear-gradient(rgba(5, 10, 48, 1), rgba(5, 10, 48, 0.8));
+      --light: #6C7293;
+      --dark: #000000;
+  }
+
+.back-to-top {
+    position: fixed;
+    display: none;
+    right: 45px;
+    bottom: 45px;
+    z-index: 99;
+}
+
+
+body {
+    background-image: url('../images/1.jpg');
+
+    background-size: cover;
+    margin-bottom: 100px;
+    padding-bottom: 100px;
+}
+h3 {
+    text-align: center;
+    color: white;
+    background-color: rgba(5, 10, 48, 0.8);
+}
+
+.content {
+    margin-top: 100px;
+    min-height: 100vh;
+    transition: 0.5s;
+    margin-bottom: 80px;
+
+}
+
+@media (min-width: 992px) {
+
+
+    .content {
+        width: calc(100% - 250px);
+        margin-left: 250px;
+    }
+}
+
+@media (max-width: 991.98px) {
+
+
+    .content {
+        width: 100%;
+        margin-left: 0;
+    }
+
+}
+
+
+/* ................footer......................... */
+
+
+@media screen and (max-width: 768px) {
+
+    .content {
+        margin-bottom: 60px;
+    }
+}
+
+
+
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    height: 8vh;
+    color: white;
+    background: var(--navbar-bg); /* Couleur de fond de l'en-tête */
+    position: fixed; /* Fixer l'en-tête en haut de la fenêtre */
+    top: 0; /* Le placer au sommet de la fenêtre */
+    width: 100%; /* Prendre toute la largeur de la fenêtre */
+    z-index: 9999; /* Assurer que l'en-tête est au-dessus de tout autre contenu */
+}
+
+
+.logo img {
+    width: 80px;
+    height: auto;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+}
+
+.title a {
+    margin-right: 20px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.title a:hover {
+    color: #007bff;
+}
+
+.ajouter-experience,.ajouter-langue,.ajouter-autre-competence,.ajouter-certification,.ajouter-competence{
+    width: 40%;
+    color: #000;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: block;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 10px;
+    background: linear-gradient(to left, rgba(5, 10, 48, 0.5), #6575ce);
+    border: 0;
+    outline: none;
+    border-radius: 30px;
+}
+/* Style pour le titre "Ajout CV" */
+h2.NOM {
+    color: #333; /* Couleur du texte */
+    text-align: center; /* Centrer le texte */
+    margin-bottom: 20px; /* Marge en bas */
+}
+
+.retirer-autre-competence,.retirer-langue,.retirer-certification,.retirer-competence,.retirer-experience{
+    width: 40%;
+    color: #000;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: block;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 10px;
+    background: linear-gradient(to left, rgba(5, 10, 48, 0.5), #e45271);
+    border: 0;
+    outline: none;
+    border-radius: 30px;
+}
+.retirer-autre-competence:hover,.retirer-langue:hover,.retirer-certification:hover,.retirer-competence:hover,.retirer-experience:hover{
+    background-color: rgb(85, 99, 129);
+}
+.ajouter-experience:hover,.ajouter-langue:hover,.ajouter-autre-competence:hover,.ajouter-certification:hover,.ajouter-competence:hover {
+    background-color: rgb(85, 99, 129);
+
+}
+.container-fluid .informationillus .form-container form .ajillu {
+    width: 40%;
+    color: #000;
+    padding: 10px 30px;
+    cursor: pointer;
+    display: block;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 10px;
+    background: linear-gradient(to left, rgba(5, 10, 48, 0.5), #b1d4e0);
+    border: 0;
+    outline: none;
+    border-radius: 30px;
+    margin-top: 5%;
+}
+.container-fluid .informationillus .form-container form .ajillu:hover {
+    background-color: rgb(85, 99, 129);
+    font-size: 1.1em;
+}
+
+
+.informationillus {
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 20px;
+
+    margin-right: 10%;
+
+}
+.container-fluid .informationillus .form-container form input,
+.container-fluid .informationillus .form-container form textarea,
+.container-fluid .informationillus .form-container form select{
+    border-radius: 0;
+   // border: 2px 1px 1px 1px solid;
+    outline: none;
+    color: #000;
+}
+
+.container-fluid .informationillus .form-container form select{
+    border-radius: 0;
+    width: 100%;
+    border: 2px 1px 1px 1px solid;
+    outline: none;
+    color: #000;
+    height: 4vh;
+}
+
+.container-fluid .informationillus .form-container form select,
+.container-fluid .informationillus .form-container form select option {
+    transition: border-color 0.3s ease-in-out;
+}
+
+
+.container-fluid .informationillus .form-container form select:focus,
+.container-fluid .informationillus .form-container form select option:focus {
+    border-color: transparent;
+    outline: none;
+
+}
+
+.container-fluid .informationillus .form-container form input:focus,
+.container-fluid .informationillus .form-container form textarea:focus {
+
+    color: #000;
+    border-color: var(--font-color);
+}
