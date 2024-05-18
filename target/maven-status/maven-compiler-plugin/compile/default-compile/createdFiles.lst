@@ -2,7 +2,6 @@ cv24/cv24/repository/AutreRepository.class
 cv24/cv24/entities/Genre.class
 cv24/cv24/controller/CvController.class
 cv24/cv24/entities/Certification.class
-cv24/cv24/controller/IdentiteController.class
 cv24/cv24/entities/Langue.class
 cv24/cv24/entities/CV.class
 cv24/cv24/repository/ExperienceRepository.class

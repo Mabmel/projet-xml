@@ -21,6 +21,7 @@ public class CV {
         this.langues = langues;
         this.autres = autres;
     }
+    public CV() {}
 
     public Identite getIdentite() {
         return identite;

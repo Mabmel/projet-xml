@@ -1,6 +1,9 @@
 package cv24.cv24.controller;
 import cv24.cv24.entities.*;
 import cv24.cv24.repository.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,8 +17,10 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.*;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
-@RestController
+@Controller
 public class CvController {
     private final IdentiteRepository identiteRepository;
     private final PosteRepository posteRepository;
@@ -109,4 +114,27 @@ public class CvController {
         return false;
     }
     }
+
+    @GetMapping("/resume")
+    public String getAllCVsForHTML(Model model) {
+        List<Identite> identites = identiteRepository.findAll();
+        List<CV> cvs = new ArrayList<>();
+
+        for (Identite identite : identites) {
+            CV cv = new CV();
+            cv.setIdentite(identite);
+            cv.setPoste(posteRepository.findByIdentiteId(identite.getId()).orElse(null));
+            cv.setExperiences(experienceRepository.findByIdentiteId(identite.getId()));
+            cv.setDiplomes(diplomeRepository.findByIdentiteId(identite.getId()));
+            cv.setCertifications(certificationRepository.findByIdentiteId(identite.getId()));
+            cv.setLangues(langueRepository.findByIdentiteId(identite.getId()));
+            cv.setAutres(autreRepository.findByIdentiteId(identite.getId()));
+            cvs.add(cv);
+        }
+
+        model.addAttribute("cvs", cvs);
+        return "resume";
+    }
+
+
 }

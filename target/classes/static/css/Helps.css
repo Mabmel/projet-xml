@@ -1,0 +1,45 @@
+.titreop {
+    text-align: center;
+    margin: 0 auto;
+    color: white;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif; /* Changer la police de caractères ici */
+    font-size: 24px; /* Changer la taille de la police de caractères ici */
+    font-weight: bold; /* Ajouter ou retirer la graisse de la police de caractères ici */
+}
+:root {
+    --primary: #3857ac;
+    --sidebar-bg: linear-gradient(rgba(5, 10, 48, 1), rgba(5, 10, 48, 0.8));
+    --navbar-bg: linear-gradient(rgba(5, 10, 48, 1), rgba(5, 10, 48, 0.8));
+    --footer-bg: linear-gradient(rgba(5, 10, 48, 1), rgba(5, 10, 48, 0.8));
+    --light: #6C7293;
+    --dark: #000000;
+}
+.supprimer{
+    color: #fff;
+    background-color: red;
+    cursor: pointer;
+
+
+}
+
+.typeoperati {
+    display: flex;
+    justify-content: center; /* Pour centrer horizontalement */
+    align-items: center; /* Pour centrer verticalement */
+    height: 5vh;
+    color: white;
+    font-family: Arial, sans-serif;
+    background: var(--navbar-bg);
+    font-weight: bold;
+}
+ul{
+    color: white;
+    font-size: 20px
+}
+body {
+    background-image: url('../images/1.jpg');
+    background-size: cover;
+    margin-bottom: 100px;
+    padding-bottom: 100px;
+}

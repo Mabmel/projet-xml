@@ -7,8 +7,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class AccueilController {
     @GetMapping("/accueil")
-    public String getIndex(Model model) {
+    public String getAccueil(Model model) {
 
         return "accueil";
+    }
+
+    @GetMapping("/help")
+    public String getHelp(Model model) {
+
+        return "help";
+    }
+
+
+    @GetMapping("/AjoutCV")
+    public String getAjoutCV(Model model) {
+
+        return "ajoutCV";
     }
 }
