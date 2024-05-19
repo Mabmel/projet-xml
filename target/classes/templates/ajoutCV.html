@@ -21,7 +21,6 @@
     <!-- Template Stylesheet -->
 
     <link rel="stylesheet" th:href="@{/css/style2.css}">
-    <!--   <link href="../static/css/style2.css" rel="stylesheet">-->
 
  </head>
 
@@ -50,7 +49,7 @@
                 </div>
             </div>
             <div class="form-container">
-                <form method=""  enctype="multipart/form-data" id="formulaireComposants">
+                <form id="formulaireComposants">
                     <!-- Identité -->
 
                     <h3>Identité</h3>
@@ -59,6 +58,7 @@
                             <div class="mb-4">
                                 <label class="form-label">Nom</label>
                                 <input type="text" class="form-control" id="nom" name="nom" required>
+                                <small id="vnom" style="color: green;"></small>
                             </div>
                         </div>
                     </div>
@@ -67,6 +67,7 @@
                             <div class="mb-4">
                                 <label class="form-label">Prénom</label>
                                 <input type="text" class="form-control" id="prenom" name="prenom" required>
+                                <small id="vprenom" style="color: green;"></small>
                             </div>
                         </div>
                     </div>
@@ -99,6 +100,7 @@
                                 <label class="form-label">Email</label>
                                 <input type="email" id="emailInput" class="form-control" name="email" required>
                                 <small id="emailError" style="color: red;"></small>
+                                <small id="vemail" style="color: green;"></small>
                             </div>
 
                         </div>
@@ -110,8 +112,10 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Objectif</label>
-                                <textarea class="form-control" name="objectif" id="emploie" required></textarea>
+                                <textarea class="form-control" name="objectif" id="objectif" required></textarea>
+                                <small id="vobjectif" style="color: green;"></small>
                             </div>
+
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -120,6 +124,8 @@
                                     <option value="stage">Stage</option>
                                     <option value="emploi">Emploi</option>
                                 </select>
+                                <small id="vstatut" style="color: green;"></small>
+
                             </div>
                         </div>
                     </div>
@@ -169,6 +175,7 @@
                                 <div class="competence mb-3">
                                     <label class="form-label">Intitulé du diplôme</label>
                                     <input type="text" class="form-control" name="diplome" required>
+                                    <small id="vdiplome" style="color: green;"></small>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -185,6 +192,7 @@
                                         <option value="Bac + 5">Bac + 5</option>
                                         <option value="Bac + 8">Bac + 8</option>
                                     </select>
+                                    <small id="vniveau" style="color: green;"></small>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -245,6 +253,7 @@
                                 <div class="langue mb-3">
                                     <label class="form-label">Langue vivante</label>
                                     <input type="text" class="form-control" name="Langue-vivante[]">
+                                    <small id="vlangueVivante" style="color: green;"></small>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -255,6 +264,7 @@
                                         <option value="CLES">CLES</option>
                                         <option value="TOEIC">TOEIC</option>
                                     </select>
+                                    <small id="vlangueCertification" style="color: green;"></small>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -319,7 +329,123 @@
 
     <script>
 
+       /* document.addEventListener("DOMContentLoaded", function() {
+            var fields = [
+                { id: "nom", message: "Veuillez saisir le nom", error: "Erreur, le champ nom est obligatoire" },
+                { id: "prenom", message: "Veuillez saisir le prénom", error: "Erreur, le champ prénom est obligatoire" },
+                { id: "telephone", message: "Veuillez saisir le téléphone", error: "Erreur, le champ téléphone est obligatoire" },
+                { id: "emailInput", message: "Veuillez saisir l'email", error: "Erreur, le champ email est obligatoire" },
+                { id: "objectif", message: "Veuillez saisir l'objectif", error: "Erreur, le champ objectif est obligatoire" },
+                { id: "statut", message: "Veuillez sélectionner le statut de l'objectif", error: "Erreur, le champ statut de l'objectif est obligatoire" },
+                { id: "diplome", message: "Veuillez saisir l'intitulé du diplôme", error: "Erreur, le champ intitulé du diplôme est obligatoire" },
+                { id: "niveau", message: "Veuillez sélectionner le niveau du diplôme", error: "Erreur, le champ niveau du diplôme est obligatoire" },
+                { id: "langueVivante", message: "Veuillez saisir la langue vivante", error: "Erreur, le champ langue vivante est obligatoire" },
+                { id: "langueCertification", message: "Veuillez sélectionner la certification de la langue", error: "Erreur, le champ certification de la langue est obligatoire" }
+            ];
 
+            fields.forEach(function(field) {
+                var input = document.getElementById(field.id);
+                var messageElement = document.getElementById("v" + field.id);
+
+                input.addEventListener("focus", function() {
+                    messageElement.textContent = field.message;
+                    messageElement.style.color = 'green';
+                });
+
+                input.addEventListener("blur", function() {
+                    if (input.value === "") {
+                        messageElement.textContent = field.error;
+                        messageElement.style.color = 'red';
+                    } else {
+                        if (field.id === "nom" || field.id === "prenom") {
+                            input.value = field.id === "nom" ? input.value.toUpperCase() : input.value.charAt(0).toUpperCase() + input.value.slice(1).toLowerCase();
+                        }
+                        messageElement.textContent = "";
+                    }
+                });
+            });
+        });
+*/
+
+       document.addEventListener("DOMContentLoaded", function() {
+           var inpnm = document.getElementById("nom");
+           var spnm = document.getElementById("vnom");
+           var inppr = document.getElementById("prenom");
+           var sppr = document.getElementById("vprenom");
+           var inpobj = document.getElementById("objectif");
+           var spobj = document.getElementById("vobjectif");
+           var inpstatut = document.getElementById("statut");
+           var spstatut = document.getElementById("vstatut");
+
+           inpnm.addEventListener("focus", function() {
+               spnm.textContent = "Veuillez saisir le nom";
+               spnm.style.color = 'green';
+           });
+
+           inpnm.addEventListener("blur", function() {
+               if (inpnm.value === "") {
+                   spnm.textContent = "Erreur, le champ nom est obligatoire";
+                   spnm.style.color = 'red';
+               } else {
+                   inpnm.value = inpnm.value.toUpperCase();
+                   spnm.textContent = "";
+               }
+           });
+
+           inppr.addEventListener("focus", function() {
+               sppr.textContent = "Veuillez saisir le prénom";
+               sppr.style.color = 'green';
+           });
+
+           inppr.addEventListener("blur", function() {
+               if (inppr.value === "") {
+                   sppr.textContent = "Erreur, le champ prénom est obligatoire";
+                   sppr.style.color = 'red';
+               } else {
+                   inppr.value = inppr.value.charAt(0).toUpperCase() + inppr.value.slice(1).toLowerCase();
+                   sppr.textContent = "";
+               }
+           });
+
+           inpobj.addEventListener("focus", function() {
+               spobj.textContent = "Veuillez saisir l'objectif";
+               spobj.style.color = 'green';
+           });
+
+           inpobj.addEventListener("blur", function() {
+               if (inpobj.value === "") {
+                   spobj.textContent = "Erreur, le champ objectif est obligatoire";
+                   spobj.style.color = 'red';
+               } else {
+                   spobj.textContent = "";
+               }
+           });
+
+           inpstatut.addEventListener("focus", function() {
+               spstatut.textContent = "Veuillez sélectionner le statut de l'objectif";
+               spstatut.style.color = 'green';
+           });
+
+           inpstatut.addEventListener("change", function() {
+               if (inpstatut.value === "") {
+                   spstatut.textContent = "Erreur, le champ statut de l'objectif est obligatoire";
+                   spstatut.style.color = 'red';
+               } else {
+                   spstatut.textContent = "";
+               }
+           });
+       });
+
+
+
+
+
+
+
+       // **********************************************************************************************************************************************************************************
+        // **********************************************************************************************************************************************************************************
+        // **********************************************************************************************************************************************************************************
+        // **********************************************************************************************************************************************************************************
         // Récupérez les éléments DOM pertinents
         const langueSelect = document.querySelector('.langue-select');
         const niveauSelect = document.querySelector('.niveau-select');
@@ -367,8 +493,21 @@
 
             if (!emailRegex.test(emailValue)) {
                 emailError.textContent = 'Format invalide';
+                emailError.style.color = 'red';
             } else {
                 emailError.textContent = ''; // Efface le message d'erreur lorsque le format est valide
+            }
+        });
+
+        emailInput.addEventListener("focus", function() {
+            emailError.textContent = "Erreur, le champ  est obligatoire";
+            emailError.style.color = 'green';
+        });
+
+        emailInput.addEventListener("blur", function() {
+            if (emailInput.value === "") {
+                emailError.textContent = "Veuillez saisir l'email";
+                emailError.style.color = 'red';
             }
         });
 
@@ -381,8 +520,21 @@
             const telephoneRegex = /^(0\d{9}|0\d{2}\s\d{2}\s\d{2}\s\d{2}\s\d{2}|\d{1}\s\d{3}\s\d{3}\s\d{3}|\+33\s\d{1}\s\d{2}\s\d{2}\s\d{2}\s\d{2})$/;
             if (!telephoneRegex.test(telephoneValue)) {
                 telephoneError.textContent = 'Format invalide';
+                telephoneError.style.color = 'red';
             } else {
                 telephoneError.textContent = ''; // Efface le message d'erreur lorsque le format est valide
+            }
+        });
+
+        telephoneInput.addEventListener("focus", function() {
+            telephoneError.textContent = "Veuillez saisir le numéro de téléphone";
+            telephoneError.style.color = 'green';
+        });
+
+        telephoneInput.addEventListener("blur", function() {
+            if (telephoneInput.value === "") {
+                telephoneError.textContent = "Erreur, le champ  est obligatoire";
+                telephoneError.style.color = 'red';
             }
         });
 
@@ -705,7 +857,7 @@
             `;
 
             // Envoyer les données XML au contrôleur via une requête POST
-            console.log(xmlData)
+            console.log("fhhjc",xmlData)
         }
 
         function collecterExperiences() {

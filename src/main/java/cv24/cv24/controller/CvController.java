@@ -1,12 +1,13 @@
 package cv24.cv24.controller;
 import cv24.cv24.entities.*;
 import cv24.cv24.repository.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.w3c.dom.*;
@@ -17,10 +18,12 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.*;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-@Controller
+@RestController
 public class CvController {
     private final IdentiteRepository identiteRepository;
     private final PosteRepository posteRepository;
@@ -135,6 +138,64 @@ public class CvController {
         model.addAttribute("cvs", cvs);
         return "resume";
     }
+    @DeleteMapping(value = "/cv24/delete/{id}", produces = "application/xml")
+    @Transactional
+    public ResponseEntity<String> deleteCV(@PathVariable Long id) {
+        try {
+            Optional<Identite> identiteOptional = identiteRepository.findById(id);
+            if (identiteOptional.isPresent()) {
+                Identite identite = identiteOptional.get();
+
+                // Supprimer d'abord les certifications liées à cette identité
+                certificationRepository.deleteByIdentiteId(identite.getId());
+
+                // Ensuite, supprimer les autres données liées à cette identité dans d'autres tables
+                posteRepository.deleteByIdentiteId(identite.getId());
+                experienceRepository.deleteByIdentiteId(identite.getId());
+                diplomeRepository.deleteByIdentiteId(identite.getId());
+                langueRepository.deleteByIdentiteId(identite.getId());
+                autreRepository.deleteByIdentiteId(identite.getId());
+
+                // Enfin, supprimer l'identité elle-même
+                identiteRepository.deleteById(id);
+
+                // Construire la réponse XML avec l'en-tête
+                StringWriter stringWriter = new StringWriter();
+                stringWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                stringWriter.write("<cv id=\"" + id + "\" status=\"DELETED\"/>");
+                String response = stringWriter.toString();
+
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_TYPE, "application/xml")
+                        .body(response);
+            } else {
+                // Retourner l'erreur si le CV n'a pas été trouvé
+                StringWriter stringWriter = new StringWriter();
+                stringWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                stringWriter.write("<status>Error: CV not found</status>");
+                String response = stringWriter.toString();
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .header(HttpHeaders.CONTENT_TYPE, "application/xml")
+                        .body(response);
+            }
+        } catch (Exception e) {
+            // Retourner l'erreur en cas d'échec de l'opération
+            StringWriter stringWriter = new StringWriter();
+            stringWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            stringWriter.write("<status>Error: " + e.getMessage() + "</status>");
+            String response = stringWriter.toString();
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header(HttpHeaders.CONTENT_TYPE, "application/xml")
+                    .body(response);
+        }
+    }
+
+
+
+
+
 
 
 }

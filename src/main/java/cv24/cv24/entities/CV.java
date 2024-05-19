@@ -1,14 +1,31 @@
 package cv24.cv24.entities;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+
 import java.util.List;
 
 public class CV {
+    @OneToOne(cascade = CascadeType.REMOVE)
     private Identite identite;
+
+    @OneToOne(cascade = CascadeType.REMOVE)
     private Poste poste;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "cv")
     private List<Experience> experiences;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "cv")
     private List<Diplome> diplomes;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "cv")
     private List<Certification> certifications;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "cv")
     private List<Langue> langues;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "cv")
     private List<Autre> autres;
 
     public CV(Identite identite, Poste poste, List<Experience> experiences, List<Diplome> diplomes,

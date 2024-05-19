@@ -10,4 +10,5 @@ import java.util.List;
 public interface ExperienceRepository extends JpaRepository<Experience, Long> {
 
     List<Experience> findByIdentiteId(Long identiteId);
+      void deleteByIdentiteId(Long identiteId);
 }

@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface PosteRepository extends JpaRepository<Poste, Long> {
     Optional<Poste> findByIdentiteId(Long identiteId);
+    void deleteByIdentiteId(Long identiteId);
+
 }

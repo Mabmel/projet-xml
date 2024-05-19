@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface DiplomeRepository extends JpaRepository<Diplome, Long> {
     List<Diplome> findByIdentiteId(Long identiteId);
+    void deleteByIdentiteId(Long identiteId);
 }
