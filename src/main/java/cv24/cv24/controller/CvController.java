@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -52,13 +51,11 @@ public class CvController {
     }
 
     @PostMapping("/validate-xml")
-    public Boolean validateXML(@RequestBody String xmlString) {
-        Boolean etat =false;
+    public ResponseEntity<String> validateXML(@RequestBody String xmlString) {
+        Boolean etat = false;
         String xsdFichierPath = "classpath:xml/shema.xsd";
 
-
         try {
-
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
 
@@ -69,20 +66,51 @@ public class CvController {
             Schema schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream(xsdFichierPath)));
 
             Validator validator = schema.newValidator();
-
             validator.validate(new DOMSource(document));
 
-            etat=true;
+            etat = true;
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            etat=false;
+            etat = false;
         }
-    if(etat){
 
-        XMLParser xp = new XMLParser();
+        if (etat) {
+            XMLParser xp = new XMLParser();
+            CV cv = xp.parseXML(xmlString);
 
-        CV cv = xp.parseXML(xmlString);
+            if (existeIdentiteDupliquee(cv)) {
+                // Le CV existe déjà, retourner un message d'erreur
+                logger.warn("Le CV existe déjà dans la base de données");
+                String response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><status>Erreur : CV déjà existant</status>";
+                return ResponseEntity.badRequest()
+                        .header(HttpHeaders.CONTENT_TYPE, "application/xml")
+                        .body(response);
+            } else {
+                // Enregistrement du CV dans la base de données
+                Long id = saveCV(cv);
 
-        identiteRepository.save(cv.getIdentite());
+                // Construire la réponse XML avec l'en-tête
+                logger.info("CV inséré avec succès dans la base de données");
+                String response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><cv id=\"" + id + "\" status=\"INSERTED\"/>";
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_TYPE, "application/xml")
+                        .body(response);
+            }
+        } else {
+            // La validation a échoué, retourner un message d'erreur
+            logger.warn("Validation XML a échoué");
+            String response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><status>Erreur : Validation XML a échoué</status>";
+            return ResponseEntity.badRequest()
+                    .header(HttpHeaders.CONTENT_TYPE, "application/xml")
+                    .body(response);
+        }
+    }
+
+
+    // Méthode pour enregistrer un nouveau CV dans la base de données
+    private Long saveCV(CV cv) {
+
+        Identite savedIdentite = identiteRepository.save(cv.getIdentite());
+        Long identiteId = savedIdentite.getId();
         Poste poste = cv.getPoste();
         poste.setIdentite(cv.getIdentite());
         // Enregistrer Poste
@@ -118,13 +146,30 @@ public class CvController {
             autreRepository.save(autre);
         }
 
+        // Retourner l'identifiant principal, par exemple, l'identifiant de l'identité
+        return identiteId;
 
+    }
 
-        return true;
-    }else {
+    // Méthode pour vérifier s'il existe une identité dupliquée dans la base de données
+    private boolean existeIdentiteDupliquee(CV cv) {
+        // Récupérer toutes les données d'identité de la base de données
+        List<Identite> identites = identiteRepository.findAll();
+        // Parcourir les données d'identité de la base de données pour comparer avec le CV
+        for (Identite identite : identites) {
+            // Comparer nom, prénom et téléphone
+            if (identite.getNom().equals(cv.getIdentite().getNom()) &&
+                    identite.getPrenom().equals(cv.getIdentite().getPrenom()) &&
+                    identite.getTel().equals(cv.getIdentite().getTel())) {
+                // Si des correspondances sont trouvées, retourner une indication d'erreur
+                return true;
+            }
+        }
+        // Aucune identité dupliquée trouvée
         return false;
     }
-    }
+
+
 
     @GetMapping("/resume")
     public String getAllCVsForHTML(Model model) {
@@ -146,6 +191,9 @@ public class CvController {
         model.addAttribute("cvs", cvs);
         return "resume";
     }
+
+
+
 
     @DeleteMapping(value = "/cv24/delete/{id}", produces = "application/xml")
     @Transactional
