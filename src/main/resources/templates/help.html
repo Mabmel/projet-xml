@@ -33,7 +33,8 @@
     <h3 class="typeoperati">Liste des CV Format HTML </h3>
     <ul>
 
-        <li><strong>URL: <a th:href="@{/resume}">Liste des CVs</a></strong> </li>
+        <!--<li><strong>URL: <a th:href="@{/resume}">Liste des CVs</a></strong> </li>-->
+        <li><strong>URL: http://localhost:8080/resume</strong> </li>
         <li><strong>Méthode attendue:</strong> GET</li>
         <li><strong>Opération:</strong> Affiche la liste des CV stockés au format HTML.</li>
         <li><strong>Retour:</strong> Page HTML présentant les informations de chaque CV.</li>
@@ -60,17 +61,18 @@
     <h3 class="typeoperati">Ajout d’un CV</h3>
     <ul>
 
-        <li><strong><a th:href="@{/AjoutCV}">AJOUTER UN CV</a></strong> </li>
-        <li><strong>Méthode attendue:</strong> GET</li>
-        <li><strong>Opération:</strong> Ajoute un nouveau CV à la base de données.</li>
-        <li><strong>Retour:</strong> Flux XML contenant les informations sur l'opération.</li>
+        <!--<li><strong><a th:href="@{/AjoutCV}">AJOUTER UN CV</a></strong> </li>-->
+        <li><strong>URL: http://localhost:8080/cv24/insert</strong> </li>
+        <li><strong>Méthode attendue:</strong> POST</li>
+        <li style="color: black;"><strong>Opération:</strong> Ajoute un nouveau CV à la base de données.</li>
+        <li style="color: black;"><strong>Retour:</strong> Flux XML contenant les informations sur l'opération.</li>
     </ul>
-    <h3 class="typeoperati">Suppression d’un CV</h3>
+    <h3 class="typeoperati" >Suppression d’un CV</h3>
     <ul>
-        <li><strong>URL:</strong> </li>
-        <li><strong>Méthode attendue:</strong> GET</li>
-        <li><strong>Opération:</strong> Supprime un CV spécifié par son identifiant.</li>
-        <li><strong>Retour:</strong> Flux XML contenant les informations sur l'opération.</li>
+        <li style="color: black;"><strong>URL: http://localhost:8080/cv24/delete/{id}</strong> </li>
+        <li style="color: black;"><strong>Méthode attendue:</strong> DELETE</li>
+        <li style="color: black;"><strong>Opération:</strong> Supprime un CV spécifié par identifiant d'une identité.</li>
+        <li style="color: black;"><strong>Retour:</strong> Flux XML contenant les informations sur l'opération.</li>
 
     </ul>
 

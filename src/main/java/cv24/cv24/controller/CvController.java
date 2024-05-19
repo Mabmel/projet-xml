@@ -54,7 +54,7 @@ public class CvController {
         this.autreRepository = autreRepository;
     }
 
-    @PostMapping("/validate-xml")
+    @PostMapping("/cv24/insert")
     public ResponseEntity<String> validateXML(@RequestBody String xmlString) {
         Boolean etat = false;
         String xsdFichierPath = "classpath:xml/shema.xsd";
