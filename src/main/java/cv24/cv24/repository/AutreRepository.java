@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface AutreRepository extends JpaRepository<Autre, Long> {
     List<Autre> findByIdentiteId(Long identiteId);
+    void deleteByIdentiteId(Long identiteId);
 }

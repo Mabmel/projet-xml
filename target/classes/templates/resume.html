@@ -6,6 +6,44 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/Helps.css}">
     <title>resume</title>
+
+
+    <script>
+        function deleteCV(cvId) {
+            if (confirm("Voulez-vous vraiment supprimer ce CV ?")) {
+                fetch(`/cv24/delete/${cvId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/xml'
+                    }
+                })
+                    .then(response => response.text())  // Lire la réponse comme du texte
+                    .then(responseText => {
+                        // Analyser la réponse XML
+                        const parser = new DOMParser();
+                        const xmlDoc = parser.parseFromString(responseText, "application/xml");
+
+                        // Récupérer les nœuds de réponse
+                        const statusNode = xmlDoc.querySelector("status");
+                        const cvNode = xmlDoc.querySelector("cv");
+
+                        if (statusNode && statusNode.textContent.startsWith("ERROR")) {
+                            alert('Erreur lors de la suppression du CV: ' + statusNode.textContent);
+                        } else if (cvNode) {
+                            alert(`CV supprimé avec succès. Status: ${cvNode.getAttribute("status")}, ID: ${cvNode.getAttribute("id")}`);
+                            location.reload();  // Recharger la page pour mettre à jour la liste des CV
+                        } else {
+                            alert('Erreur lors de la suppression du CV');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur:', error);
+                        alert('Erreur lors de la suppression du CV');
+                    });
+            }
+        }
+
+    </script>
 </head>
 <body>
 <header>
@@ -21,6 +59,13 @@
     <h2 class="titreop">Liste des CV</h2>
     <div class="container-fluid pt-4 px-4">
         <div class="text-center rounded p-4" style="background-color: aliceblue;">
+            <!-- Vérifiez si le message est présent -->
+            <div th:if="${message}">
+                <p th:text="${message}" style="color: red; font-weight: bold;"></p>
+            </div>
+            <!-- Afficher la table si les CVs sont présents -->
+            <div th:if="${cvs}">
+
             <div class="table-responsive">
                 <table border="1">
                     <tr>
@@ -28,7 +73,10 @@
                         <th>Genre</th>
                         <th>Prénom</th>
                         <th>Nom</th>
+                        <th>Objectif</th>
+                        <th>Status</th>
                         <th>Diplôme</th>
+
                         <th>Action</th>
                     </tr>
                     <tr th:each="cv : ${cvs}">
@@ -36,15 +84,21 @@
                         <td th:text="${cv.identite.genre}"></td>
                         <td th:text="${cv.identite.prenom}"></td>
                         <td th:text="${cv.identite.nom}"></td>
+                        <td th:text=" ${cv.poste.intiltule} "></td>
+                        <td th:text="${cv.poste.status} "></td>
                         <td th:text="${cv.diplomes[0].titre}"></td>
                         <td>
-                            <button class="supprimer">Supprimer</button>
+                            <button class="supprimer" th:onclick="'deleteCV(' + ${cv.identite.id} + ')'">Supprimer</button>
                         </td>
+
                     </tr>
+
                 </table>
+            </div>
             </div>
         </div>
     </div>
 </main>
+
 </body>
 </html>
