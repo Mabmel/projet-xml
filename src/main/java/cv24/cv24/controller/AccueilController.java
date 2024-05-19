@@ -18,10 +18,4 @@ public class AccueilController {
         return "help";
     }
 
-
-    @GetMapping("/AjoutCV")
-    public String getAjoutCV(Model model) {
-
-        return "ajoutCV";
-    }
 }
