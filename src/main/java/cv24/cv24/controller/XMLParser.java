@@ -8,8 +8,16 @@ import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -159,7 +167,266 @@ public class XMLParser {
         return null;
     }
 
+    public String parseDataToXML(List<CV> cvList) {
+            try {
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document doc = builder.newDocument();
 
+                Element cv24Element = doc.createElementNS("http://univ.fr/cv24", "cv24");
+                doc.appendChild(cv24Element);
+
+                for (CV cv : cvList) {
+                    Element cvElement = doc.createElement("cv");
+                    cv24Element.appendChild(cvElement);
+
+                    // Ajouter l'ID
+                    Element idElement = doc.createElement("id");
+                    idElement.setTextContent(String.valueOf(cv.getIdentite().getId()));
+                    cvElement.appendChild(idElement);
+
+                    // Ajouter l'identité
+                    Element identiteElement = doc.createElement("identite");
+                    cvElement.appendChild(identiteElement);
+
+                    Element nomElement = doc.createElement("nom");
+                    nomElement.setTextContent(cv.getIdentite().getNom());
+                    identiteElement.appendChild(nomElement);
+
+                    Element prenomElement = doc.createElement("prenom");
+                    prenomElement.setTextContent(cv.getIdentite().getPrenom());
+                    identiteElement.appendChild(prenomElement);
+
+                    Element genreElement = doc.createElement("genre");
+                    Identite i = cv.getIdentite();
+                    genreElement.setTextContent(String.valueOf(i.getGenre()));
+                    identiteElement.appendChild(genreElement);
+
+                    Element objectifElement = doc.createElement("objectif");
+                    Poste p = cv.getPoste();
+                    objectifElement.setAttribute("statut", String.valueOf(p.getStatus()));
+                    objectifElement.setTextContent(p.getIntiltule());
+                    cvElement.appendChild(objectifElement);
+
+                    Element diplomeElement = doc.createElement("diplome");
+                    Diplome highestDiplome = cv.getDiplomes().stream()
+                            .max((d1, d2) -> d1.getDateObtention().compareTo(d2.getDateObtention()))
+                            .orElse(null);
+                    if (highestDiplome != null) {
+                        diplomeElement.setTextContent(highestDiplome.getTitre());
+                    }
+                    cvElement.appendChild(diplomeElement);
+                }
+
+                StringWriter writer = new StringWriter();
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                transformer.transform(new DOMSource(doc), new StreamResult(writer));
+                return writer.toString();
+            } catch (ParserConfigurationException | TransformerException e) {
+                e.printStackTrace();
+                return "<error>Unable to generate XML</error>";
+            }
+    }
+
+
+    public String parseDataCVToXML(CV cv) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.newDocument();
+
+            Element cv24Element = doc.createElementNS("http://univ.fr/cv24", "cv24:cv24");
+            doc.appendChild(cv24Element);
+            cv24Element.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:schemaLocation", "http://univ.fr/cv24 schema.xsd");
+
+            // Identité
+            Element identiteElement = doc.createElement("cv24:identite");
+            cv24Element.appendChild(identiteElement);
+
+            Identite i = cv.getIdentite();
+            Element genreElement = doc.createElement("cv24:genre");
+            String genreValue = i.getGenre().toString().toUpperCase();
+            switch (genreValue) {
+                case "MME":
+                    genreElement.setTextContent("Mme");
+                    break;
+                case "M.":
+                case "MR":
+                    genreElement.setTextContent("M.");
+                    break;
+                case "MRS":
+                    genreElement.setTextContent("Mrs");
+                    break;
+                case "MISS":
+                    genreElement.setTextContent("Miss");
+                    break;
+                default:
+                    genreElement.setTextContent("Mme"); // default or handle the error accordingly
+                    break;
+            }
+            identiteElement.appendChild(genreElement);
+
+            Element nomElement = doc.createElement("cv24:nom");
+            nomElement.setTextContent(i.getNom());
+            identiteElement.appendChild(nomElement);
+
+            Element prenomElement = doc.createElement("cv24:prenom");
+            prenomElement.setTextContent(i.getPrenom());
+            identiteElement.appendChild(prenomElement);
+
+            Element telElement = doc.createElement("cv24:tel");
+            telElement.setTextContent(i.getTel());
+            identiteElement.appendChild(telElement);
+
+            Element melElement = doc.createElement("cv24:mel");
+            melElement.setTextContent(i.getEmail());
+            identiteElement.appendChild(melElement);
+
+            // Objectif
+            Element objectifElement = doc.createElement("cv24:objectif");
+            cv24Element.appendChild(objectifElement);
+
+            Poste p = cv.getPoste();
+            objectifElement.setAttribute("statut", String.valueOf(p.getStatus()));
+            objectifElement.setTextContent(p.getIntiltule());
+
+            // Prof
+            if (cv.getExperiences() != null && !cv.getExperiences().isEmpty()) {
+                Element profElement = doc.createElement("cv24:prof");
+                cv24Element.appendChild(profElement);
+
+                for (Experience experience : cv.getExperiences()) {
+                    Element detailElement = doc.createElement("cv24:detail");
+                    profElement.appendChild(detailElement);
+
+                    Element datedebElement = doc.createElement("cv24:datedeb");
+                    datedebElement.setTextContent(formatDate((Timestamp) experience.getDatedeb()));
+                    detailElement.appendChild(datedebElement);
+
+                    Element datefinElement = doc.createElement("cv24:datefin");
+                    datefinElement.setTextContent(formatDate((Timestamp) experience.getDatefin()));
+                    detailElement.appendChild(datefinElement);
+
+                    Element titreElement = doc.createElement("cv24:titre");
+                    titreElement.setTextContent(experience.getTitre());
+                    detailElement.appendChild(titreElement);
+                }
+            }
+
+            // Compétences
+            Element competencesElement = doc.createElement("cv24:competences");
+            cv24Element.appendChild(competencesElement);
+
+            for (Diplome diplome : cv.getDiplomes()) {
+                Element diplomeElement = doc.createElement("cv24:diplome");
+                competencesElement.appendChild(diplomeElement);
+
+                Element dateElement = doc.createElement("cv24:date");
+                dateElement.setTextContent(formatDate((Timestamp) diplome.getDateObtention()));
+                diplomeElement.appendChild(dateElement);
+
+                Element institutElement = doc.createElement("cv24:institut");
+                institutElement.setTextContent(diplome.getInstitut());
+                diplomeElement.appendChild(institutElement);
+
+                Element titreDElement = doc.createElement("cv24:titreD");
+                titreDElement.setTextContent(diplome.getTitre());
+                diplomeElement.appendChild(titreDElement);
+                diplomeElement.setAttribute("niveau", String.valueOf(diplome.getNiveauQualification()));
+                diplomeElement.setAttribute("intitule", diplome.getTitre());
+            }
+
+            for (Certification certification : cv.getCertifications()) {
+                Element certifElement = doc.createElement("cv24:certif");
+                competencesElement.appendChild(certifElement);
+
+                Element datedebElement = doc.createElement("cv24:datedeb");
+                datedebElement.setTextContent(formatDate((Timestamp) certification.getDateDebut()));
+                certifElement.appendChild(datedebElement);
+
+                Element datefinElement = doc.createElement("cv24:datefin");
+                datefinElement.setTextContent(formatDate((Timestamp) certification.getDateFin()));
+                certifElement.appendChild(datefinElement);
+
+                Element titreElement = doc.createElement("cv24:titre");
+                titreElement.setTextContent(certification.getTitre());
+                certifElement.appendChild(titreElement);
+            }
+
+            // Divers
+            if (cv.getLangues() != null && !cv.getLangues().isEmpty()) {
+                Element diversElement = doc.createElement("cv24:divers");
+                cv24Element.appendChild(diversElement);
+
+                for (Langue langue : cv.getLangues()) {
+                    Element lvElement = doc.createElement("cv24:lv");
+
+                    String certType = langue.getCert().toString();
+                    lvElement.setAttribute("lang", langue.getNom());
+                    lvElement.setAttribute("cert", certType);
+
+                    if ("MATt".equals(certType)) {
+                        // No nivs or nivi
+                    } else if ("CLES".equals(certType)) {
+                        Niveaux nivimaitrise = langue.getNivs();
+                        lvElement.setAttribute("nivs", String.valueOf(nivimaitrise));
+                    } else if ("TOIC".equals(certType)) {
+                        int nivi = langue.getNivi(); // Ensure nivi is a valid number
+                        lvElement.setAttribute("nivi", String.valueOf(nivi));
+                    }
+
+                    diversElement.appendChild(lvElement);
+                }
+
+                for (Autre autre : cv.getAutres()) {
+                    Element autreElement = doc.createElement("cv24:autre");
+                    autreElement.setAttribute("titre", autre.getTitre());
+                    autreElement.setAttribute("comment", autre.getCommentaire());
+                    diversElement.appendChild(autreElement);
+                }
+            }
+
+            StringWriter writer = new StringWriter();
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.transform(new DOMSource(doc), new StreamResult(writer));
+            return writer.toString();
+        } catch (ParserConfigurationException | TransformerException e) {
+            e.printStackTrace();
+            return "<error>Unable to generate XML</error>";
+        }
+    }
+
+    private String formatDate(Timestamp timestamp) {
+        return timestamp.toLocalDateTime().toLocalDate().toString();
+    }
+
+
+    public String generateErrorXML(String errorMessage) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.newDocument();
+
+            Element errorElement = doc.createElement("error");
+            doc.appendChild(errorElement);
+
+            Element messageElement = doc.createElement("message");
+            messageElement.setTextContent(errorMessage);
+            errorElement.appendChild(messageElement);
+
+            StringWriter writer = new StringWriter();
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.transform(new DOMSource(doc), new StreamResult(writer));
+            return writer.toString();
+        } catch (ParserConfigurationException | TransformerException e) {
+            e.printStackTrace();
+            return "<error><message>Erreur interne lors de la génération du message d'erreur XML.</message></error>";
+        }
+
+    }
 
 
 }
