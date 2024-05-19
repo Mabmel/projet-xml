@@ -4,6 +4,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class CV {
@@ -27,6 +28,7 @@ public class CV {
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "cv")
     private List<Autre> autres;
+    private Diplome diplomePlusRecent;
 
     public CV(Identite identite, Poste poste, List<Experience> experiences, List<Diplome> diplomes,
               List<Certification> certifications, List<Langue> langues, List<Autre> autres) {
@@ -95,4 +97,28 @@ public class CV {
     public void setAutres(List<Autre> autres) {
         this.autres = autres;
     }
+
+
+    public Diplome getDiplomePlusRecent() {
+        if (diplomes == null || diplomes.isEmpty()) {
+            return null; // Retourne null si la liste des diplômes est vide
+        }
+
+        // Tri des diplômes par date d'obtention dans l'ordre décroissant
+        diplomes.sort(Comparator.comparing(Diplome::getDateObtention, Comparator.reverseOrder()));
+
+        // Récupération du premier diplôme (le plus récent)
+        Diplome diplomePlusRecent = diplomes.get(0);
+
+        // Mise à jour du champ diplomePlusRecent
+        setDiplomePlusRecent(diplomePlusRecent);
+
+        return diplomePlusRecent;
+    }
+
+
+    public void setDiplomePlusRecent(Diplome diplomePlusRecent) {
+        this.diplomePlusRecent = diplomePlusRecent;
+    }
+    
 }

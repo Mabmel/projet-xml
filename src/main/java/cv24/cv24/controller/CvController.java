@@ -6,12 +6,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.w3c.dom.*;
+import org.xml.sax.SAXParseException;
+
 import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
 import javax.xml.transform.dom.DOMSource;
@@ -24,7 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+//@RestController
+@Controller
 public class CvController {
 
     //Ajout desx log pour la gestion
@@ -55,6 +59,7 @@ public class CvController {
         Boolean etat = false;
         String xsdFichierPath = "classpath:xml/shema.xsd";
 
+
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -69,7 +74,24 @@ public class CvController {
             validator.validate(new DOMSource(document));
 
             etat = true;
+        } catch (SAXParseException e) {
+            // Capturer les détails de l'erreur SAXParseException
+            int lineNumber = e.getLineNumber();
+            int columnNumber = e.getColumnNumber();
+            String errorMessage = e.getMessage();
+
+
+            // Journaliser l'erreur
+            logger.error("Erreur de validation XML : Ligne {}, Colonne {} - {}", lineNumber, columnNumber, errorMessage);
+            // Construire la réponse d'erreur avec les détails
+            String response = String.format("<?xml version=\"1.0\" encoding=\"UTF-8\"?><status>Erreur de validation XML : Ligne %d, Colonne %d - %s</status>", lineNumber, columnNumber, errorMessage);
+            return ResponseEntity.badRequest()
+                    .header(HttpHeaders.CONTENT_TYPE, "application/xml")
+                    .body(response);
         } catch (ParserConfigurationException | SAXException | IOException e) {
+            // Journaliser l'erreur
+            logger.error("Une erreur est survenue lors de la validation XML : {}", e.getMessage());
+
             etat = false;
         }
 
@@ -98,10 +120,12 @@ public class CvController {
         } else {
             // La validation a échoué, retourner un message d'erreur
             logger.warn("Validation XML a échoué");
-            String response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><status>Erreur : Validation XML a échoué</status>";
+            String response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><status>Erreur de validation XML : Le fichier XML est invalide</status>";
             return ResponseEntity.badRequest()
                     .header(HttpHeaders.CONTENT_TYPE, "application/xml")
                     .body(response);
+
+
         }
     }
 
@@ -173,6 +197,7 @@ public class CvController {
 
     @GetMapping("/resume")
     public String getAllCVsForHTML(Model model) {
+        try {
         List<Identite> identites = identiteRepository.findAll();
         List<CV> cvs = new ArrayList<>();
 
@@ -181,24 +206,42 @@ public class CvController {
             cv.setIdentite(identite);
             cv.setPoste(posteRepository.findByIdentiteId(identite.getId()).orElse(null));
             cv.setExperiences(experienceRepository.findByIdentiteId(identite.getId()));
-            cv.setDiplomes(diplomeRepository.findByIdentiteId(identite.getId()));
+           cv.setDiplomes(diplomeRepository.findByIdentiteId(identite.getId()));
             cv.setCertifications(certificationRepository.findByIdentiteId(identite.getId()));
             cv.setLangues(langueRepository.findByIdentiteId(identite.getId()));
             cv.setAutres(autreRepository.findByIdentiteId(identite.getId()));
+            // Récupération du diplôme le plus récent et ajout au CV
+            Diplome diplomePlusRecent = cv.getDiplomePlusRecent();
+            cv.setDiplomePlusRecent(diplomePlusRecent);
+
             cvs.add(cv);
         }
+        if (cvs.isEmpty()) {
+            logger.info("Aucun CV trouvé dans la base de données.");
+            model.addAttribute("message", "Aucun CV trouvé dans la base de données.");
+        } else {
+            logger.info("Nombre de CVs trouvés dans la base de données : {}", cvs.size());
+            model.addAttribute("cvs", cvs);
+        }
 
-        model.addAttribute("cvs", cvs);
         return "resume";
-    }
+    }  catch (Exception e) {
+            // Log the error
+            logger.error("Une erreur est survenue lors de la récupération des CVs : {}", e.getMessage());
 
+            // Add an error message to the model
+            model.addAttribute("errorMessage", "Une erreur est survenue lors de la récupération des CVs. Veuillez réessayer plus tard.");
+
+            // Return an error page or redirect to an error page
+            return "error"; // Assuming you have an "error" template
+        }
+    }
 
 
 
     @DeleteMapping(value = "/cv24/delete/{id}", produces = "application/xml")
     @Transactional
     public ResponseEntity<String> deleteCV(@PathVariable Long id) {
-        // Logger  enregistrer les messages de log
         logger.info("Requête reçue pour supprimer le CV avec l'id : {}", id);
         try {
             Optional<Identite> identiteOptional = identiteRepository.findById(id);
@@ -208,33 +251,31 @@ public class CvController {
                 // Supprimer les certifications
                 certificationRepository.deleteByIdentiteId(identite.getId());
 
-                //  supprimer les autres données liées à cette identité
+                // Supprimer les autres données liées à cette identité
                 posteRepository.deleteByIdentiteId(identite.getId());
                 experienceRepository.deleteByIdentiteId(identite.getId());
                 diplomeRepository.deleteByIdentiteId(identite.getId());
                 langueRepository.deleteByIdentiteId(identite.getId());
                 autreRepository.deleteByIdentiteId(identite.getId());
 
-                //  supprimer l'identité
+                // Supprimer l'identité
                 identiteRepository.deleteById(id);
 
                 // Construire la réponse XML avec l'en-tête
                 StringWriter stringWriter = new StringWriter();
                 stringWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                stringWriter.write("<cv id=\"" + id + "\" status=\"SUPPRIMÉ\"/>");
+                stringWriter.write("<cv id=\"" + id + "\" status=\"DELETED\"/>");
                 String response = stringWriter.toString();
 
-                // En cv  trouver
                 logger.info("CV avec l'id : {} supprimé avec succès", id);
                 return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_TYPE, "application/xml")
                         .body(response);
             } else {
-                // En cv non trouver
                 logger.warn("CV avec l'id : {} non trouvé", id);
                 StringWriter stringWriter = new StringWriter();
                 stringWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                stringWriter.write("<status>Erreur : CV non trouvé</status>");
+                stringWriter.write("<status>ERROR</status>");
                 String response = stringWriter.toString();
 
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -242,11 +283,10 @@ public class CvController {
                         .body(response);
             }
         } catch (Exception e) {
-            //  retourner une réponse avec le message d'erreur
             logger.error("Une erreur est survenue lors de la suppression du CV avec l'id : {}", id, e);
             StringWriter stringWriter = new StringWriter();
             stringWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            stringWriter.write("<status>Erreur : " + e.getMessage() + "</status>");
+            stringWriter.write("<status>ERROR : " + e.getMessage() + "</status>");
             String response = stringWriter.toString();
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -254,7 +294,6 @@ public class CvController {
                     .body(response);
         }
     }
-
 
 
 
