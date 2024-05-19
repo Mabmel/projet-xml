@@ -29,6 +29,7 @@
                         <th>Prénom</th>
                         <th>Nom</th>
                         <th>Diplôme</th>
+                        <th>Action</th>
                     </tr>
                     <tr th:each="cv : ${cvs}">
                         <td th:text="${cv.identite.id}"></td>
@@ -36,7 +37,9 @@
                         <td th:text="${cv.identite.prenom}"></td>
                         <td th:text="${cv.identite.nom}"></td>
                         <td th:text="${cv.diplomes[0].titre}"></td>
-
+                        <td>
+                        <button class="supprimer">Supprimer</button>
+                        </td>
 
                     </tr>
 

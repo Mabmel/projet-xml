@@ -1,6 +1,8 @@
 package cv24.cv24.controller;
 import cv24.cv24.entities.*;
 import cv24.cv24.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,12 @@ import java.util.Optional;
 
 @RestController
 public class CvController {
+
+    //Ajout desx log pour la gestion
+    private static final Logger logger = LoggerFactory.getLogger(CvController.class);
+
+
+
     private final IdentiteRepository identiteRepository;
     private final PosteRepository posteRepository;
     private final ExperienceRepository experienceRepository;
@@ -138,41 +146,47 @@ public class CvController {
         model.addAttribute("cvs", cvs);
         return "resume";
     }
+
     @DeleteMapping(value = "/cv24/delete/{id}", produces = "application/xml")
     @Transactional
     public ResponseEntity<String> deleteCV(@PathVariable Long id) {
+        // Logger  enregistrer les messages de log
+        logger.info("Requête reçue pour supprimer le CV avec l'id : {}", id);
         try {
             Optional<Identite> identiteOptional = identiteRepository.findById(id);
             if (identiteOptional.isPresent()) {
                 Identite identite = identiteOptional.get();
 
-                // Supprimer d'abord les certifications liées à cette identité
+                // Supprimer les certifications
                 certificationRepository.deleteByIdentiteId(identite.getId());
 
-                // Ensuite, supprimer les autres données liées à cette identité dans d'autres tables
+                //  supprimer les autres données liées à cette identité
                 posteRepository.deleteByIdentiteId(identite.getId());
                 experienceRepository.deleteByIdentiteId(identite.getId());
                 diplomeRepository.deleteByIdentiteId(identite.getId());
                 langueRepository.deleteByIdentiteId(identite.getId());
                 autreRepository.deleteByIdentiteId(identite.getId());
 
-                // Enfin, supprimer l'identité elle-même
+                //  supprimer l'identité
                 identiteRepository.deleteById(id);
 
                 // Construire la réponse XML avec l'en-tête
                 StringWriter stringWriter = new StringWriter();
                 stringWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                stringWriter.write("<cv id=\"" + id + "\" status=\"DELETED\"/>");
+                stringWriter.write("<cv id=\"" + id + "\" status=\"SUPPRIMÉ\"/>");
                 String response = stringWriter.toString();
 
+                // En cv  trouver
+                logger.info("CV avec l'id : {} supprimé avec succès", id);
                 return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_TYPE, "application/xml")
                         .body(response);
             } else {
-                // Retourner l'erreur si le CV n'a pas été trouvé
+                // En cv non trouver
+                logger.warn("CV avec l'id : {} non trouvé", id);
                 StringWriter stringWriter = new StringWriter();
                 stringWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                stringWriter.write("<status>Error: CV not found</status>");
+                stringWriter.write("<status>Erreur : CV non trouvé</status>");
                 String response = stringWriter.toString();
 
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -180,10 +194,11 @@ public class CvController {
                         .body(response);
             }
         } catch (Exception e) {
-            // Retourner l'erreur en cas d'échec de l'opération
+            //  retourner une réponse avec le message d'erreur
+            logger.error("Une erreur est survenue lors de la suppression du CV avec l'id : {}", id, e);
             StringWriter stringWriter = new StringWriter();
             stringWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            stringWriter.write("<status>Error: " + e.getMessage() + "</status>");
+            stringWriter.write("<status>Erreur : " + e.getMessage() + "</status>");
             String response = stringWriter.toString();
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
