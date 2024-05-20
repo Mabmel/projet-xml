@@ -371,7 +371,9 @@ public class CvController {
             Schema schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream(xsdFichierPath)));
             Validator validator = schema.newValidator();;
             validator.validate(new DOMSource(document));
+            logger.info("generation du html avec succes");
         } catch (ParserConfigurationException | SAXException | IOException e) {
+            logger.error("Une erreur s'est produite : " + e.getMessage());
             return xp.generateErrorXML("Erreur de validation du XML par rapport au schéma XSD: " + e.getMessage());
         }
         XMLParser xmlParser = new XMLParser();
