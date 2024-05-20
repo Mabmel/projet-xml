@@ -186,17 +186,23 @@ public class CvController {
 
     }
 
-    // Méthode pour vérifier s'il existe une identité dupliquée dans la base de données
     private boolean existeIdentiteDupliquee(CV cv) {
         // Récupérer toutes les données d'identité de la base de données
         List<Identite> identites = identiteRepository.findAll();
+
         // Parcourir les données d'identité de la base de données pour comparer avec le CV
         for (Identite identite : identites) {
-            // Comparer nom, prénom et téléphone
-            if (identite.getNom().equals(cv.getIdentite().getNom()) &&
-                    identite.getPrenom().equals(cv.getIdentite().getPrenom()) &&
-                    identite.getTel().equals(cv.getIdentite().getTel())) {
+            String telAsString = identite.getTel().toString();
+            String sString =cv.getIdentite().getTel().toString();
+
+            // Comparer nom, prénom et téléphone en ignorant la casse
+            if (identite.getNom().equalsIgnoreCase(cv.getIdentite().getNom()) &&
+                    identite.getPrenom().equalsIgnoreCase(cv.getIdentite().getPrenom()))
+                    {
                 // Si des correspondances sont trouvées, retourner une indication d'erreur
+                return true;
+            }
+            if(telAsString.equals(sString)){
                 return true;
             }
         }
@@ -204,25 +210,38 @@ public class CvController {
         return false;
     }
 
+
+
+
     @GetMapping(value = "/cv24/resume/xml", produces = "application/xml")
     @ResponseBody
     public String getAllCVsForXML() {
-        List<Identite> identites = identiteRepository.findAll();
-        List<CV> cvs = new ArrayList<>();
-        for (Identite identite : identites) {
-            CV cv = new CV();
-            cv.setIdentite(identite);
-            cv.setPoste(posteRepository.findByIdentiteId(identite.getId()).orElse(null));
-            cv.setExperiences(experienceRepository.findByIdentiteId(identite.getId()));
-            cv.setDiplomes(diplomeRepository.findByIdentiteId(identite.getId()));
-            cv.setCertifications(certificationRepository.findByIdentiteId(identite.getId()));
-            cv.setLangues(langueRepository.findByIdentiteId(identite.getId()));
-            cv.setAutres(autreRepository.findByIdentiteId(identite.getId()));
-            cvs.add(cv);
+        XMLParser xp = new XMLParser(); // Initialisation de xp ici
+
+        try {
+            List<Identite> identites = identiteRepository.findAll();
+            List<CV> cvs = new ArrayList<>();
+
+            for (Identite identite : identites) {
+                CV cv = new CV();
+                cv.setIdentite(identite);
+                cv.setPoste(posteRepository.findByIdentiteId(identite.getId()).orElse(null));
+                cv.setExperiences(experienceRepository.findByIdentiteId(identite.getId()));
+                cv.setDiplomes(diplomeRepository.findByIdentiteId(identite.getId()));
+                cv.setCertifications(certificationRepository.findByIdentiteId(identite.getId()));
+                cv.setLangues(langueRepository.findByIdentiteId(identite.getId()));
+                cv.setAutres(autreRepository.findByIdentiteId(identite.getId()));
+                cvs.add(cv);
+            }
+
+            return xp.parseDataToXML(cvs); // Utilisation de xp ici
+        } catch (Exception e) {
+            logger.error("Une erreur est survenue lors de la génération du XML pour les CVs : {}", e.getMessage());
+            return xp.generateErrorXML("Une erreur est survenue lors de la génération du XML pour les CVs.");
         }
-        XMLParser xp = new XMLParser();
-        return xp.parseDataToXML(cvs);
     }
+
+
 
     @GetMapping(value = "/cv24/xml", produces = "application/xml")
     @ResponseBody
@@ -255,9 +274,10 @@ public class CvController {
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream(xsdFichierPath)));
             Validator validator = schema.newValidator();
-            ;
+            logger.info("génération du XML du CV");
             validator.validate(new DOMSource(document));
         } catch (ParserConfigurationException | SAXException | IOException e) {
+            logger.error("Une erreur est survenue lors de la génération du XML d'detail d'un CV: {}", e.getMessage());
             return xp.generateErrorXML("Erreur de validation du XML par rapport au schéma XSD: " + e.getMessage());
         }
         return fxml;
@@ -300,7 +320,7 @@ public class CvController {
                 logger.warn("CV avec l'id : {} non trouvé", id);
                 StringWriter stringWriter = new StringWriter();
                 stringWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                stringWriter.write("<status>ERROR</status>");
+                stringWriter.write("<status>Erreur</status>");
                 String response = stringWriter.toString();
 
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -311,7 +331,7 @@ public class CvController {
             logger.error("Une erreur est survenue lors de la suppression du CV avec l'id : {}", id, e);
             StringWriter stringWriter = new StringWriter();
             stringWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            stringWriter.write("<status>ERROR : " + e.getMessage() + "</status>");
+            stringWriter.write("<status>Erreur : " + e.getMessage() + "</status>");
             String response = stringWriter.toString();
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -381,4 +401,7 @@ public class CvController {
             return "<status>ERROR</status>";
         }
     }
+
+
+
 }
