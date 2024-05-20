@@ -318,5 +318,46 @@ public class CvController {
                     .body(response);
         }
     }
+
+    @GetMapping(value = "/cv24/html")
+    public String getCVDetailHTML(@RequestParam("id") Long id, Model model) throws ParserConfigurationException, IOException, SAXException, TransformerException {
+
+        Identite identite = identiteRepository.findById(id).orElse(null);
+        XMLParser xp = new XMLParser();
+        if (identite == null) {
+            return xp.generateErrorXML("Identité non trouvée pour l'ID: " + id);
+        }
+
+        CV cv = new CV();
+        cv.setIdentite(identite);
+        cv.setPoste(posteRepository.findByIdentiteId(identite.getId()).orElse(null));
+        cv.setExperiences(experienceRepository.findByIdentiteId(identite.getId()));
+        cv.setDiplomes(diplomeRepository.findByIdentiteId(identite.getId()));
+        cv.setCertifications(certificationRepository.findByIdentiteId(identite.getId()));
+        cv.setLangues(langueRepository.findByIdentiteId(identite.getId()));
+        cv.setAutres(autreRepository.findByIdentiteId(identite.getId()));
+
+        String fxml = xp.parseDataCVToXML(cv);
+        String xsdFichierPath = "classpath:xml/shema.xsd";
+
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(new InputSource(new StringReader(fxml)));
+
+            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream(xsdFichierPath)));
+            Validator validator = schema.newValidator();;
+            validator.validate(new DOMSource(document));
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            return xp.generateErrorXML("Erreur de validation du XML par rapport au schéma XSD: " + e.getMessage());
+        }
+        XMLParser xmlParser = new XMLParser();
+
+
+        return xp.genereateHTMLWithXSLT(fxml);
+    }
 }
 

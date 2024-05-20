@@ -14,11 +14,8 @@ public class TestXML {
         try {
             String xmlChemin = "src/main/resources/xml/test.xml";
             String xsltchemin = "src/main/resources/xml/parser.xslt";
-            String outputchemin = "src/main/resources/Resultatv3.html";
-            // Création de la factory de transformation
+            String outputchemin = "src/main/resources/templates/DetailCV.html";
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
-
-            //fichier xslt
             Source xslt = new StreamSource(new File(xsltchemin));
             Transformer transformer = transformerFactory.newTransformer(xslt);
 
@@ -28,18 +25,9 @@ public class TestXML {
 
             // fichier XML
             Source xml = new StreamSource(new File(xmlChemin));
-
-
             Result output = new StreamResult(new File(outputchemin));
             transformer.transform(xml, output);
-
-            // Vérification si le fichier HTML a été généré
-
             assertTrue(new java.io.File(outputchemin).exists(), "Le fichier HTML a été généré.");
-
-
-
-
             System.out.println("Le fichier HTML  généré avec succès : " + outputchemin);
         } catch (TransformerException e) {
             e.printStackTrace();

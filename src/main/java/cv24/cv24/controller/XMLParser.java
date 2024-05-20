@@ -5,7 +5,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-
+import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -13,8 +15,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.sql.Timestamp;
@@ -22,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class XMLParser {
 
@@ -427,6 +428,38 @@ public class XMLParser {
         }
 
     }
+
+    public String genereateHTMLWithXSLT(String fluxXML) {
+        StringWriter htmlWriter = new StringWriter();
+        try {
+            String xsltchemin = "/xml/parser.xslt";
+
+            InputStream xsltStream = getClass().getClassLoader().getResourceAsStream(xsltchemin);
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Source xslt = new StreamSource(xsltStream);
+
+            // Créer le transformateur
+            Transformer transformer = transformerFactory.newTransformer(xslt);
+
+            transformer.setOutputProperty(OutputKeys.METHOD, "html");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+
+            Source xml = new StreamSource(new StringReader(fluxXML));
+
+            Result output = new StreamResult(htmlWriter);
+            transformer.transform(xml, output);
+
+
+            System.out.println("Le code HTML  généré avec succès : ");
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+
+        return htmlWriter.toString();
+    }
+
+
 
 
 }
