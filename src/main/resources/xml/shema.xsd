@@ -93,6 +93,7 @@
 	<xs:simpleType name="String32">
 		<xs:restriction base="xs:string">
 			<xs:maxLength value="32"/>
+			<xs:pattern value="[a-zA-Z -']*"/>
 
 		</xs:restriction>
 	</xs:simpleType>
@@ -101,6 +102,8 @@
 	<xs:simpleType name="String128">
 		<xs:restriction base="xs:string">
 			<xs:maxLength value="128"/>
+			<xs:pattern value="[a-zA-Z0-9 .,:;~@\()&amp;#&#33;?$%=_-]*"/>
+
 
 		</xs:restriction>
 	</xs:simpleType>
@@ -200,7 +203,7 @@
 	<xs:complexType name="competencestype">
 		<xs:sequence>
 			<xs:element ref="diplome"  minOccurs="1" maxOccurs="5"/>
-			<xs:element ref="certif" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element ref="certif" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	<!-- *************************************************************** -->
@@ -208,7 +211,7 @@
 		<xs:sequence>
 			<xs:element ref="date"/>
 			<xs:element ref="institut" minOccurs="0" maxOccurs="1"/>
-			<xs:element ref="titreD" minOccurs="0" maxOccurs="5"/>
+			<xs:element ref="titreD" minOccurs="1" maxOccurs="5"/>
 
 		</xs:sequence>
 		<!-- declarartion attribut niveau  -->
