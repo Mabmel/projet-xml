@@ -1,6 +1,6 @@
 cv24/cv24/repository/AutreRepository.class
-cv24/cv24/entities/Genre.class
 cv24/cv24/controller/CvController.class
+cv24/cv24/entities/Genre.class
 cv24/cv24/entities/Certification.class
 cv24/cv24/entities/Langue.class
 cv24/cv24/entities/CV.class
@@ -15,10 +15,10 @@ cv24/cv24/repository/IdentiteRepository.class
 cv24/cv24/entities/Identite.class
 cv24/cv24/entities/Diplome.class
 cv24/cv24/entities/Poste.class
-cv24/cv24/Cv24Application.class
 cv24/cv24/entities/Niveaux.class
-cv24/cv24/repository/DiplomeRepository.class
+cv24/cv24/Cv24Application.class
 cv24/cv24/controller/GetHtmlController.class
+cv24/cv24/repository/DiplomeRepository.class
 cv24/cv24/entities/Experience.class
 cv24/cv24/repository/PosteRepository.class
 cv24/cv24/entities/TypeContart.class

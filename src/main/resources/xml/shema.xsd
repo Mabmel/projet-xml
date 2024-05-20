@@ -85,12 +85,15 @@
 	<xs:simpleType name="String32maj">
 		<xs:restriction base="xs:string">
 			<xs:maxLength value="32"/>
+			<xs:pattern value="[A-Z]*"/>
 		</xs:restriction>
 	</xs:simpleType>
+
 	<!-- Define String32 -->
 	<xs:simpleType name="String32">
 		<xs:restriction base="xs:string">
 			<xs:maxLength value="32"/>
+			<xs:pattern value="[a-zA-Z -']*"/>
 
 		</xs:restriction>
 	</xs:simpleType>
@@ -99,6 +102,8 @@
 	<xs:simpleType name="String128">
 		<xs:restriction base="xs:string">
 			<xs:maxLength value="128"/>
+			<xs:pattern value="[a-zA-Z0-9 .,:;~@\()&amp;#&#33;?$%=_-]*"/>
+
 
 		</xs:restriction>
 	</xs:simpleType>
@@ -107,9 +112,20 @@
 	<!--type telephone   -->
 	<xs:simpleType name="telType">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="\d{10}|\d{2}\s\d{2}\s\d{2}\s\d{2}|\d{1}\s\d{3}\s\d{3}\s\d{3}|\+33\s\d{1,2}\s\d{2}\s\d{2}\s\d{2}\s\d{2}"/>
+			<!-- Format a) 0123456789: Standard    -->
+			<xs:pattern value="\d{10}"/>
+
+			<!-- Format b) 01 23 45 67 89: -->
+			<xs:pattern value="\d{2}\s\d{2}\s\d{2}\s\d{2}\s\d{2}"/>
+
+			<!-- Format c) 0 123 456 789: -->
+			<xs:pattern value="\d{1}\s\d{3}\s\d{3}\s\d{3}"/>
+
+			<!-- Format d) +33 1 23 45 67 89:  -->
+			<xs:pattern value="\+33\s\d{1,2}\s\d{2}\s\d{2}\s\d{2}\s\d{2}"/>
 		</xs:restriction>
 	</xs:simpleType>
+
 
 	<!-- email  -->
 	<xs:simpleType name="TypeMel">
@@ -187,7 +203,7 @@
 	<xs:complexType name="competencestype">
 		<xs:sequence>
 			<xs:element ref="diplome"  minOccurs="1" maxOccurs="5"/>
-			<xs:element ref="certif" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element ref="certif" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	<!-- *************************************************************** -->
@@ -195,7 +211,7 @@
 		<xs:sequence>
 			<xs:element ref="date"/>
 			<xs:element ref="institut" minOccurs="0" maxOccurs="1"/>
-			<xs:element ref="titreD" minOccurs="0" maxOccurs="5"/>
+			<xs:element ref="titreD" minOccurs="1" maxOccurs="5"/>
 
 		</xs:sequence>
 		<!-- declarartion attribut niveau  -->
