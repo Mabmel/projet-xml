@@ -1,9 +1,9 @@
 {
   "build": {
     "type": "maven",
-    "goal": "package package -DskidTests"
+    "goal": "package"
   },
   "deploy": {
-    "goal": "./target/*.jar"
+    "goal": "spring-boot:run"
   }
 }
